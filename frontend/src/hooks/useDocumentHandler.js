@@ -7,6 +7,7 @@ export const useDocumentHandler = () => {
 
   const loadDocuments = useCallback(async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get("http://localhost:8000/api/documents");
       const rawDocuments = response.data;
 
@@ -21,6 +22,8 @@ export const useDocumentHandler = () => {
       setDocuments(uniqueDocuments);
     } catch (error) {
       console.error("Error loading documents:", error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 

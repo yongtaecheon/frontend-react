@@ -10,7 +10,7 @@ const LeftPanel = ({
 }) => {
   const isCurrentDocument = (doc) => {
     if (!currentPdfFile || !doc) return false;
-    const currentFileName = currentPdfFile.split('/').pop();
+    const currentFileName = currentPdfFile.split("/").pop();
     return doc.filename === currentFileName;
   };
 
@@ -30,7 +30,7 @@ const LeftPanel = ({
         <img src="/poby_list_bg.png" alt="" className="background-image" />
       </div>
       <div className="documents-list">
-        <h3>Uploaded Documents</h3>
+        <h3>업로드 한 문서</h3>
         {documents.map((doc, index) => (
           <div
             key={index}
