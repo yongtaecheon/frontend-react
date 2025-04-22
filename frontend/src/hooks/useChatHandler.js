@@ -12,10 +12,10 @@ export const useChatHandler = (toc, handleTocClick) => {
 
   const resetChat = () => {
     setChatHistory([]);
-    
+
     // Find all level 2 items (first actual TOC items)
-    const topLevelItems = toc.filter(item => item.level === 2);
-    
+    const topLevelItems = toc.filter((item) => item.level === 2);
+
     if (topLevelItems.length > 0) {
       setChatHistory([
         {
@@ -36,7 +36,7 @@ export const useChatHandler = (toc, handleTocClick) => {
       ]);
     } else {
       // If no level 2 items found, show all items except level 1
-      const nonTitleItems = toc.filter(item => item.level > 1);
+      const nonTitleItems = toc.filter((item) => item.level > 1);
       setChatHistory([
         {
           type: "bot",
@@ -64,16 +64,15 @@ export const useChatHandler = (toc, handleTocClick) => {
     }
 
     // Add user's selection to chat history
-    setChatHistory(prev => [
-      ...prev,
-      { type: 'user', content: option.text }
-    ]);
+    setChatHistory((prev) => [...prev, { type: "user", content: option.text }]);
 
     // Move to the selected page
     handleTocClick(option.page);
 
     // Find the index of the current option in the TOC
-    const currentIndex = toc.findIndex(t => t.title === option.text && t.level === option.level && t.page === option.page);
+    const currentIndex = toc.findIndex(
+      (t) => t.title === option.text && t.level === option.level && t.page === option.page
+    );
 
     // Find child items (next level items)
     const childItems = [];
@@ -90,33 +89,36 @@ export const useChatHandler = (toc, handleTocClick) => {
 
     if (childItems.length > 0) {
       // Add bot response with child options
-      setChatHistory(prev => [
+      setChatHistory((prev) => [
         ...prev,
         {
-          type: 'bot',
+          type: "bot",
           content: (
-              <div>
-                  <span>세부 목차를 선택하세요   <span className="material-symbols-outlined">pets</span></span>
-              </div>
+            <div>
+              <span>
+                세부 목차를 선택하세요 <span className="material-symbols-outlined">pets</span>
+              </span>
+            </div>
           ),
-          options: childItems.map(item => ({
+          options: childItems.map((item) => ({
             text: item.title,
             page: item.page,
-            level: item.level
-          }))
-        }
+            level: item.level,
+          })),
+        },
       ]);
     } else {
       // No child items, just confirm selection
-      setChatHistory(prev => [
+      setChatHistory((prev) => [
         ...prev,
         {
-          type: 'bot',
+          type: "bot",
           content: `${option.text}(으)로 이동했습니다.`,
-          options: [{ text: '처음으로', page: 1, level: 0 }] // Special level for '처음으로'
-        }
+          options: [{ text: "처음으로", page: 1, level: 0 }], // Special level for '처음으로'
+        },
       ]);
     }
+    console.log(chatHistory);
   };
 
   return {
