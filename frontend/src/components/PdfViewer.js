@@ -3,6 +3,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import LoadingSpinner from "./LoadingSpinner";
+import "../styles/components/PDFViewer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -10,7 +11,9 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState('single');
+  const [viewMode, setViewMode] = useState('single'); // 'single' or 'grid'
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDocumentLoaded, setIsDocumentLoaded] = useState(false);
   const [textItems, setTextItems] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -253,23 +256,21 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
   // Handle Ctrl+F
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.ctrlKey && e.key === 'f') {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
+        e.stopPropagation();
         toggleSearch();
       } else if (e.key === 'Escape' && isSearchOpen) {
-        // Close search on Escape key
         setIsSearchOpen(false);
         setSearchQuery("");
         setSearchResults([]);
         setCurrentSearchIndex(-1);
-        
-        // Clear highlights
         clearHighlights();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
   }, [isSearchOpen]);
 
   // Re-run search when page changes
@@ -333,17 +334,6 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       return () => container.removeEventListener('scroll', handleScroll);
     }
   }, [viewMode]);
-
-  useEffect(() => {
-    // 커스텀 스타일 추가
-    const styleElement = document.createElement('style');
-    styleElement.textContent = customStyles;
-    document.head.appendChild(styleElement);
-
-    return () => {
-      document.head.removeChild(styleElement);
-    };
-  }, []);
 
   useEffect(() => {
     setIsLoading(true);
