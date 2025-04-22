@@ -8,6 +8,11 @@ import { usePdfHandler } from "./hooks/usePdfHandler";
 import { useChatHandler } from "./hooks/useChatHandler";
 import { useDocumentHandler } from "./hooks/useDocumentHandler";
 import "./App.css";
+import "./styles/global.css";
+import "./styles/components/MainLayout.css";
+import "./styles/components/LandingPage.css";
+import "./styles/components/Chat.css";
+import "./styles/components/PDFViewer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -22,7 +27,7 @@ function App() {
     pdfKey,
     numPages,
     scale,
-    isLoading,
+    isLoading: pdfLoading,
     setScale,
     processFile,
     onDocumentLoadSuccess,
@@ -34,7 +39,7 @@ function App() {
     // Find the page element and scroll to it instantly
     const pageElement = document.querySelector(`[data-page-number="${page}"]`);
     if (pageElement) {
-      pageElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+      pageElement.scrollIntoView({ behavior: "auto", block: "start" });
     }
     if (pdfViewerRef.current) {
       pdfViewerRef.current.goToPage(page);
@@ -84,7 +89,7 @@ function App() {
   };
 
   if (!isAppActive) {
-    return <LandingPage onFileChange={onFileChange} isLoading={isLoading} />;
+    return <LandingPage onFileChange={onFileChange} isLoading={pdfLoading} />;
   }
 
   return (
@@ -97,9 +102,11 @@ function App() {
         currentPdfFile={pdfFile}
         onDocumentClick={onDocumentSelect}
       />
-      <div className="collapsed-panel-indicator" onClick={() => setIsPanelCollapsed(false)}>
-        <img src="/poby_panel.png" alt="Open Panel" />
-      </div>
+      {isPanelCollapsed && (
+        <div className="collapsed-panel-indicator" onClick={() => setIsPanelCollapsed(false)}>
+          <img src="/poby_panel.png" alt="Open Panel" />
+        </div>
+      )}
       <div className="center-panel">
         {pdfFile ? (
           <PdfViewer
@@ -115,7 +122,7 @@ function App() {
         ) : (
           <div className="no-pdf-message">문서를 선택해주세요.</div>
         )}
-        {isLoading && <div className="loading-spinner centered overlay"></div>}
+        {pdfLoading && <div className="loading-spinner centered overlay"></div>}
       </div>
       <div className="right-panel">
         <ChatPanel chatHistory={chatHistory} onOptionClick={handleOptionClick} ref={chatContainerRef} />

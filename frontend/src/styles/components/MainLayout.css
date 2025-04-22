@@ -1,0 +1,214 @@
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--color-light-gray);
+}
+
+.left-panel {
+  width: 20%;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-light);
+  border-right: none;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  margin: 2vh;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.left-panel.collapsed {
+  transform: translateX(-100%);
+  min-width: 0;
+  width: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.left-panel.collapsed .left-panel-header,
+.left-panel.collapsed .file-upload-button,
+.left-panel.collapsed .background-layer,
+.left-panel.collapsed .documents-list {
+  opacity: 0;
+}
+
+.left-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toggle-panel-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  color: var(--color-button-dim);
+}
+
+.toggle-panel-button:hover {
+  opacity: 0.8;
+}
+
+.toggle-panel-button .material-symbols-outlined {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.left-panel.collapsed .toggle-panel-button .material-symbols-outlined {
+  transform: rotate(180deg);
+}
+
+.left-panel h1 {
+  font-size: 1.8em;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #000;
+}
+
+.file-upload-button {
+  background-color: var(--color-button-dim);
+  color: var(--color-white);
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  width: 100%;
+  font-size: 1rem;
+  position: relative;
+  z-index: 3;
+}
+
+.file-upload-button:hover {
+  background-color: #404040;
+}
+
+.background-layer {
+  position: relative;
+  width: 100%;
+  margin-top: 0%;
+  margin-bottom: -140%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.background-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+
+.documents-list {
+  position: relative;
+  z-index: 2;
+  width: 70%;
+  margin: -100px auto 0;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+  will-change: transform;
+  transform: translateZ(0);
+  flex-shrink: 0;
+}
+
+.documents-list h3 {
+  font-size: 1.4em;
+  font-weight: 700;
+  margin: -5px 0 15px 0;
+  color: #2a2a2a;
+  width: 100%;
+}
+
+.document-item {
+  padding: 12px;
+  margin-bottom: 8px;
+  background-color: var(--color-bg-light);
+  border-left: 4px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-black);
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, border-left-color 0.2s ease;
+}
+
+.document-item:hover {
+  background-color: var(--color-focus);
+}
+
+.document-item.active {
+  background-color: var(--color-focus);
+  font-weight: 500;
+  border-left-color: var(--color-button-dim);
+}
+
+.center-panel {
+  background-color: var(--color-bg-light);
+  width: 50%;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  transition: width 0.3s ease;
+  margin: 2vh 0 2vh 0;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.right-panel {
+  width: 25%;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-light);
+  border-left: none;
+  gap: 15px;
+  transition: width 0.3s ease;
+  border-radius: 10px;
+  margin: 2vh;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.left-panel.collapsed ~ .center-panel {
+  width: 70%;
+}
+
+.left-panel.collapsed ~ .right-panel {
+  width: 30%;
+}
+
+.back-button {
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
+}
+
+.file-input {
+  margin-bottom: 20px;
+  width: 100%;
+}
