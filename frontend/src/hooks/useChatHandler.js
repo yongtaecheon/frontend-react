@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-export const useChatHandler = (toc, handleTocClick) => {
+export const useChatHandler = (toc, handlePageNavigation) => {
   const [chatHistory, setChatHistory] = useState([]);
   const chatContainerRef = useRef(null);
 
@@ -32,7 +32,11 @@ export const useChatHandler = (toc, handleTocClick) => {
       setChatHistory([
         {
           type: "bot",
-          content: "목차 키워드를 선택하세요",
+          content: (
+            <div>
+                <span>목차 키워드를 선택하세요  <span className="material-symbols-outlined">pets</span></span>
+            </div>
+          ),
           options: topLevelItems.map((item) => ({
             text: item.title,
             page: item.page,
@@ -46,7 +50,11 @@ export const useChatHandler = (toc, handleTocClick) => {
       setChatHistory([
         {
           type: "bot",
-          content: "목차 키워드를 선택하세요",
+          content: (
+            <div>
+                <span>목차 키워드를 선택하세요  <span className="material-symbols-outlined">pets</span></span>
+            </div>
+          ),
           options: nonTitleItems.map((item) => ({
             text: item.title,
             page: item.page,
@@ -66,8 +74,8 @@ export const useChatHandler = (toc, handleTocClick) => {
     // Add user's selection to chat history
     setChatHistory((prev) => [...prev, { type: "user", content: option.text }]);
 
-    // Move to the selected page
-    handleTocClick(option.page);
+    // Move to the selected page with keyword
+    handlePageNavigation(option.page, option.text);
 
     // Find the index of the current option in the TOC
     const currentIndex = toc.findIndex(
