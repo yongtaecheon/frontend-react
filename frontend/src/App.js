@@ -84,6 +84,9 @@ function App() {
     setIsAppActive(true);
     setShouldResetChat(true);
     setPdfKey((prev) => prev + 1);
+    if (pdfViewerRef.current) {
+      pdfViewerRef.current.goToPage(1);
+    }
   };
 
   if (!isAppActive) {
