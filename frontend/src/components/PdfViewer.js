@@ -87,85 +87,103 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
   const highlightText = (searchText, isSearch = false) => {
     if (!searchText) return;
     
-    // First, completely reset the text layer to its original state
-    clearHighlights();
-    
-    const textLayer = document.querySelector('.react-pdf__Page__textContent');
-    if (!textLayer) return;
-    
-    // Get all text nodes
-    const textNodes = [];
-    const walker = document.createTreeWalker(
-      textLayer,
-      NodeFilter.SHOW_TEXT,
-      null,
-      false
-    );
-    
-    let node;
-    while ((node = walker.nextNode())) {
-      if (node && node.textContent) {
-        textNodes.push(node);
+    // First, completely reset all text layers to their original state
+    const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
+    allTextLayers.forEach(textLayer => {
+      if (!textLayer) return;
+      
+      try {
+        // Remove all highlights and restore original text
+        const allHighlights = textLayer.querySelectorAll('.highlight');
+        allHighlights.forEach(highlight => {
+          if (highlight && highlight.parentNode) {
+            const parent = highlight.parentNode;
+            // If the highlight is inside a span, replace the span with its text content
+            if (parent.tagName === 'SPAN') {
+              if (parent.parentNode) {
+                parent.parentNode.replaceChild(document.createTextNode(parent.textContent), parent);
+              }
+            } else {
+              // Otherwise replace the highlight with its text content
+              parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Error clearing highlights:", error);
       }
-    }
+    });
     
     const results = [];
     
-    // Process each text node
-    textNodes.forEach(node => {
-      if (!node || !node.parentNode) return;
+    // Process each text layer
+    allTextLayers.forEach(textLayer => {
+      if (!textLayer) return;
       
-      const nodeText = node.textContent;
-      const searchLower = searchText.toLowerCase();
-      const nodeLower = nodeText.toLowerCase();
+      // Get all text nodes
+      const textNodes = [];
+      const walker = document.createTreeWalker(
+        textLayer,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+      );
       
-      if (nodeLower.includes(searchLower)) {
-        // Create a new span element
-        const span = document.createElement('span');
-        
-        // Replace the text with highlighted version
-        const escapedText = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(`(${escapedText})`, 'gi');
-        span.innerHTML = nodeText.replace(regex, '<span class="highlight' + (isSearch ? ' search' : '') + '">$1</span>');
-        
-        // Replace the original node with our new span
-        try {
-          node.parentNode.replaceChild(span, node);
-          
-          if (isSearch) {
-            const highlights = span.querySelectorAll('.highlight.search');
-            highlights.forEach(highlight => {
-              results.push({
-                element: highlight,
-                text: highlight.textContent
-              });
-            });
-          }
-        } catch (error) {
-          console.error("Error replacing node:", error);
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node && node.textContent) {
+          textNodes.push(node);
         }
       }
+      
+      // Process each text node
+      textNodes.forEach(node => {
+        if (!node || !node.parentNode) return;
+        
+        const nodeText = node.textContent;
+        const searchLower = searchText.toLowerCase();
+        const nodeLower = nodeText.toLowerCase();
+        
+        if (nodeLower.includes(searchLower)) {
+          // Create a new span element
+          const span = document.createElement('span');
+          
+          // Replace the text with highlighted version
+          const escapedText = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp(`(${escapedText})`, 'gi');
+          span.innerHTML = nodeText.replace(regex, '<span class="highlight' + (isSearch ? ' search' : '') + '">$1</span>');
+          
+          // Replace the original node with our new span
+          try {
+            node.parentNode.replaceChild(span, node);
+            
+            if (isSearch) {
+              const highlights = span.querySelectorAll('.highlight.search');
+              highlights.forEach(highlight => {
+                results.push({
+                  element: highlight,
+                  text: highlight.textContent,
+                  pageNumber: parseInt(highlight.closest('.react-pdf__Page').getAttribute('data-page-number'))
+                });
+              });
+            }
+          } catch (error) {
+            console.error("Error replacing node:", error);
+          }
+        }
+      });
     });
     
     if (isSearch) {
       setSearchResults(results);
       if (results.length > 0) {
         setCurrentSearchIndex(0);
-        try {
-          results[0].element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          results[0].element.classList.add('current');
-        } catch (error) {
-          console.error("Error scrolling to first result:", error);
-        }
+        results[0].element.classList.add('current');
       }
     } else {
-      const firstHighlight = textLayer.querySelector('.highlight');
+      const firstHighlight = document.querySelector('.highlight');
       if (firstHighlight) {
-        try {
-          firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } catch (error) {
-          console.error("Error scrolling to highlight:", error);
-        }
+        firstHighlight.classList.add('current');
       }
     }
   };
@@ -242,8 +260,32 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       setSearchResults([]);
       setCurrentSearchIndex(-1);
       
-      // Clear highlights
-      clearHighlights();
+      // Clear all highlights
+      const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
+      allTextLayers.forEach(textLayer => {
+        if (!textLayer) return;
+        
+        try {
+          // Remove all highlights and restore original text
+          const allHighlights = textLayer.querySelectorAll('.highlight');
+          allHighlights.forEach(highlight => {
+            if (highlight && highlight.parentNode) {
+              const parent = highlight.parentNode;
+              // If the highlight is inside a span, replace the span with its text content
+              if (parent.tagName === 'SPAN') {
+                if (parent.parentNode) {
+                  parent.parentNode.replaceChild(document.createTextNode(parent.textContent), parent);
+                }
+              } else {
+                // Otherwise replace the highlight with its text content
+                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+              }
+            }
+          });
+        } catch (error) {
+          console.error("Error clearing highlights:", error);
+        }
+      });
     }
   };
 
@@ -281,14 +323,13 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
         const textLayer = document.querySelector('.react-pdf__Page__textContent');
         if (textLayer && textLayer.children.length > 0) {
           clearInterval(checkTextLayer);
-          clearHighlights();
+          // Store current search index before re-running search
+          const prevIndex = currentSearchIndex;
           highlightText(searchQuery, true);
-          
-          // If there are search results, scroll to the first one
-          if (searchResults.length > 0) {
-            setCurrentSearchIndex(0);
-            searchResults[0].element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            searchResults[0].element.classList.add('current');
+          // Restore the previous search index
+          if (prevIndex >= 0 && prevIndex < searchResults.length) {
+            setCurrentSearchIndex(prevIndex);
+            searchResults[prevIndex].element.classList.add('current');
           }
         }
       }, 100);
@@ -296,7 +337,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       // Cleanup interval after 5 seconds to prevent infinite checking
       setTimeout(() => clearInterval(checkTextLayer), 5000);
     }
-  }, [currentPage, isSearchOpen]);
+  }, [currentPage, isSearchOpen, searchQuery]);
 
   React.useImperativeHandle(ref, () => ({
     goToPage,
