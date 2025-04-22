@@ -4,6 +4,7 @@ import LandingPage from "./components/LandingPage";
 import LeftPanel from "./components/LeftPanel";
 import PdfViewer from "./components/PdfViewer";
 import ChatPanel from "./components/ChatPanel";
+import LoadingSpinner from "./components/LoadingSpinner";
 import { usePdfHandler } from "./hooks/usePdfHandler";
 import { useChatHandler } from "./hooks/useChatHandler";
 import { useDocumentHandler } from "./hooks/useDocumentHandler";
@@ -70,6 +71,8 @@ function App() {
 
   const onFileChange = async (event) => {
     const file = event.target.files[0];
+    if (!file) return;
+
     try {
       const newToc = await processFile(file);
       setToc(newToc);
@@ -127,7 +130,7 @@ function App() {
         ) : (
           <div className="no-pdf-message">문서를 선택해주세요.</div>
         )}
-        {pdfLoading && <div className="loading-spinner centered overlay"></div>}
+        {pdfLoading && !pdfFile && <LoadingSpinner className="overlay" />}
       </div>
       <div className="right-panel">
         <ChatPanel chatHistory={chatHistory} onOptionClick={handleOptionClick} ref={chatContainerRef} />

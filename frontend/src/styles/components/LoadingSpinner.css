@@ -1,0 +1,34 @@
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 1000;
+}
+
+.loading-spinner img {
+  animation: spin 3s linear infinite;
+  width: 100px;
+  height: 100px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Remove default spinner styles */
+.spinner {
+  display: none;
+}

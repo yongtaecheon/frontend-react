@@ -29,8 +29,6 @@ export const usePdfHandler = () => {
       } catch (error) {
         console.error("Error uploading file:", error);
         throw error;
-      } finally {
-        setIsLoading(false);
       }
     }
   }, []);
@@ -38,6 +36,7 @@ export const usePdfHandler = () => {
   const onDocumentLoadSuccess = useCallback(({ numPages }) => {
     setNumPages(numPages);
     setPageNumber(1);
+    setIsLoading(false);
   }, []);
 
   const handleTocClick = useCallback((page) => {
@@ -48,6 +47,7 @@ export const usePdfHandler = () => {
   }, []);
 
   const handleDocumentClick = useCallback((document) => {
+    setIsLoading(true);
     const fileUrl = `http://localhost:8000/uploads/${document.filename}`;
     setPdfFile(fileUrl);
     setPdfKey((prev) => prev + 1);

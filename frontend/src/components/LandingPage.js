@@ -1,4 +1,5 @@
 import React from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
 const LandingPage = ({ onFileChange, isLoading }) => {
   return (
@@ -51,7 +52,31 @@ const LandingPage = ({ onFileChange, isLoading }) => {
           />
         </div>
       </div>
-      {isLoading && <div className="loading-spinner centered overlay"></div>}
+      {isLoading && (
+        <div className="loading-overlay">
+          <LoadingSpinner />
+        </div>
+      )}
+      <style jsx>{`
+        .loading-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(255, 255, 255, 0.7);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+        input[type="file"]::-webkit-file-upload-button {
+          display: none;
+        }
+        input[type="file"] {
+          color: transparent;
+        }
+      `}</style>
     </div>
   );
 };

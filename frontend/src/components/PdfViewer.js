@@ -2,13 +2,47 @@ import React, { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
+import LoadingSpinner from "./LoadingSpinner";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
+// 기본 로딩 스피너 스타일 제거
+const customStyles = `
+  .react-pdf__Document {
+    position: relative;
+  }
+  .react-pdf__Document .react-pdf__message {
+    display: none !important;
+  }
+  .react-pdf__Page {
+    position: relative;
+  }
+  .react-pdf__Page .react-pdf__message {
+    display: none !important;
+  }
+  .react-pdf__Page__canvas {
+    margin: 0 auto;
+  }
+  .react-pdf__Page__textContent {
+    display: none !important;
+  }
+  .react-pdf__Page__annotations {
+    display: none !important;
+  }
+  .react-pdf__Page__loading {
+    display: none !important;
+  }
+  .react-pdf__Page__loading .react-pdf__message {
+    display: none !important;
+  }
+`;
 
 const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadSuccess, onLoadError }, ref) => {
   const containerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState('single'); // 'single' or 'grid'
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDocumentLoaded, setIsDocumentLoaded] = useState(false);
 
   const zoomIn = () => {
     setScale((prev) => Math.min(prev + 0.1, 2.0));
@@ -63,10 +97,10 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       if (viewMode === 'grid') {
         const pages = document.querySelectorAll('.react-pdf__Page');
         const containerTop = containerRef.current?.getBoundingClientRect().top;
-        
+
         let closestPage = 1;
         let minDistance = Infinity;
-        
+
         pages.forEach((page) => {
           const pageTop = page.getBoundingClientRect().top - containerTop;
           const distance = Math.abs(pageTop);
@@ -75,7 +109,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
             closestPage = parseInt(page.getAttribute('data-page-number'));
           }
         });
-        
+
         setCurrentPage(closestPage);
       }
     };
@@ -86,6 +120,33 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       return () => container.removeEventListener('scroll', handleScroll);
     }
   }, [viewMode]);
+
+  useEffect(() => {
+    // 커스텀 스타일 추가
+    const styleElement = document.createElement('style');
+    styleElement.textContent = customStyles;
+    document.head.appendChild(styleElement);
+
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setIsDocumentLoaded(false);
+  }, [pdfFile]);
+
+  useEffect(() => {
+    let timer;
+    if (isDocumentLoaded) {
+      // 문서가 로드된 후에도 최소 1초 동안 스피너 표시
+      timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [isDocumentLoaded]);
 
   return (
     <div className="pdf-container" ref={containerRef}>
@@ -122,39 +183,45 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
         </div>
       </div>
       <div className="pdf-viewer">
-        <Document
-          file={pdfFile}
-          onLoadSuccess={({ numPages }) => onDocumentLoadSuccess({ numPages })}
-          onLoadError={onLoadError}
-          loading={
-            <div className="loading-spinner centered">
-              <div className="spinner"></div>
-              <p>PDF 로딩 중...</p>
-            </div>
-          }
-        >
-          {viewMode === 'single' ? (
-            <Page
-              key={`page_${currentPage}`}
-              pageNumber={currentPage}
-              scale={scale}
-              className="pdf-page"
-              renderTextLayer={true}
-              renderAnnotationLayer={true}
-            />
-          ) : (
-            Array.from(new Array(numPages), (el, index) => (
+        {isLoading && <LoadingSpinner />}
+        <div style={{ display: isLoading ? 'none' : 'block' }}>
+          <Document
+            file={pdfFile}
+            onLoadSuccess={({ numPages }) => {
+              onDocumentLoadSuccess({ numPages });
+              setIsDocumentLoaded(true);
+            }}
+            onLoadError={(error) => {
+              onLoadError(error);
+              setIsDocumentLoaded(true);
+            }}
+            loading={null}
+          >
+            {viewMode === 'single' ? (
               <Page
-                key={`page_${index + 1}`}
-                pageNumber={index + 1}
+                key={`page_${currentPage}`}
+                pageNumber={currentPage}
                 scale={scale}
                 className="pdf-page"
                 renderTextLayer={true}
                 renderAnnotationLayer={true}
+                loading={null}
               />
-            ))
-          )}
-        </Document>
+            ) : (
+              Array.from(new Array(numPages), (el, index) => (
+                <Page
+                  key={`page_${index + 1}`}
+                  pageNumber={index + 1}
+                  scale={scale}
+                  className="pdf-page"
+                  renderTextLayer={true}
+                  renderAnnotationLayer={true}
+                  loading={null}
+                />
+              ))
+            )}
+          </Document>
+        </div>
       </div>
     </div>
   );
