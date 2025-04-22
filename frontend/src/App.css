@@ -726,10 +726,10 @@ body {
 }
 
 .textLayer .highlight {
-  margin: -1px;
-  padding: 1px;
-  background-color: rgb(180, 0, 170);
-  border-radius: 4px;
+  background-color: rgba(255, 255, 0);
+  border-radius: 3px;
+  padding: 0 2px;
+  margin: 0 -2px;
 }
 
 .textLayer .highlight.begin {

@@ -16,6 +16,7 @@ function App() {
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [toc, setToc] = useState([]);
   const pdfViewerRef = useRef(null);
+  const [highlightKeyword, setHighlightKeyword] = useState("");
 
   const {
     pdfFile,
@@ -30,7 +31,7 @@ function App() {
     handleDocumentClick,
   } = usePdfHandler();
 
-  const handlePageNavigation = (page) => {
+  const handlePageNavigation = (page, keyword) => {
     // Find the page element and scroll to it instantly
     const pageElement = document.querySelector(`[data-page-number="${page}"]`);
     if (pageElement) {
@@ -39,6 +40,8 @@ function App() {
     if (pdfViewerRef.current) {
       pdfViewerRef.current.goToPage(page);
     }
+    // Set the keyword to highlight
+    setHighlightKeyword(keyword || "");
   };
 
   const { chatHistory, chatContainerRef, resetChat, handleOptionClick } = useChatHandler(toc, handlePageNavigation);
@@ -111,6 +114,7 @@ function App() {
             setScale={setScale}
             onDocumentLoadSuccess={onDocumentLoadSuccess}
             onLoadError={(error) => console.error("Failed to load PDF:", error.message)}
+            highlightKeyword={highlightKeyword}
           />
         ) : (
           <div className="no-pdf-message">문서를 선택해주세요.</div>

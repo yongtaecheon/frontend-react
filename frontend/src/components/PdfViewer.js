@@ -5,10 +5,11 @@ import "react-pdf/dist/esm/Page/TextLayer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadSuccess, onLoadError }, ref) => {
+const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadSuccess, onLoadError, highlightKeyword }, ref) => {
   const containerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState('single'); // 'single' or 'grid'
+  const [textItems, setTextItems] = useState([]);
 
   const zoomIn = () => {
     setScale((prev) => Math.min(prev + 0.1, 2.0));
@@ -47,6 +48,57 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       pageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+
+  const highlightText = () => {
+    if (!highlightKeyword) return;
+
+    const textLayer = document.querySelector('.react-pdf__Page__textContent');
+    if (!textLayer) return;
+
+    // Remove existing highlights
+    const existingHighlights = textLayer.querySelectorAll('.highlight');
+    existingHighlights.forEach(highlight => {
+      const parent = highlight.parentNode;
+      parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+    });
+
+    // Add new highlights
+    const walker = document.createTreeWalker(
+      textLayer,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+
+    const nodes = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      nodes.push(node);
+    }
+
+    nodes.forEach(node => {
+      const text = node.textContent;
+      const regex = new RegExp(highlightKeyword, 'gi');
+      if (regex.test(text)) {
+        const span = document.createElement('span');
+        span.innerHTML = text.replace(regex, match => `<span class="highlight">${match}</span>`);
+        node.parentNode.replaceChild(span, node);
+      }
+    });
+
+    // Scroll to the first highlight
+    const firstHighlight = textLayer.querySelector('.highlight');
+    if (firstHighlight) {
+      firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  useEffect(() => {
+    if (highlightKeyword) {
+      // Wait for the text layer to be rendered
+      setTimeout(highlightText, 1000);
+    }
+  }, [highlightKeyword, currentPage]);
 
   // 외부에서 페이지 이동을 제어할 수 있도록 ref 노출
   React.useImperativeHandle(ref, () => ({
