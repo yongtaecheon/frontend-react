@@ -23,7 +23,7 @@ const LeftPanel = ({
         </button>
       </div>
       <button onClick={() => document.getElementById("file-input").click()} className="file-upload-button">
-        File Upload
+        파일 업로드
       </button>
       <input id="file-input" type="file" accept=".pdf" onChange={onFileChange} style={{ display: "none" }} />
       <div className="background-layer">

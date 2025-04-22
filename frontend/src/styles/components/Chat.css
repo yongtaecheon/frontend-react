@@ -9,7 +9,7 @@
 
 .chat-message {
   padding: 15px;
-  border-radius: 12px;
+  border-radius: 10px;
   max-width: 100%;
   word-wrap: break-word;
   box-shadow: 0 0px 2px var(--color-border);
@@ -57,7 +57,7 @@
   background-color: var(--color-bg-light);
   color: var(--color-black);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   text-align: left;
   transition: background-color 0.2s;
@@ -70,9 +70,17 @@
 
 .option-button.dim {
   background-color: var(--color-button-dim);
+  color: var(--color-white);
 }
+.option-button.dim:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  transition: background-color 0.5s;
+}
+
 .option-button.light {
   background-color: var(--color-button-light);
+  color: var(--color-white);
 }
 
 .option-button:hover {
@@ -88,7 +96,7 @@
   margin-top: auto;
   padding: 15px;
   background-color: var(--color-white);
-  border-radius: 12px;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -97,7 +105,7 @@
   padding: 12px;
   padding-right: 40px;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.9em;
   resize: none;
 }
