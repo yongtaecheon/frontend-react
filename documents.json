@@ -9825,5 +9825,631 @@
         "page": 386
       }
     ]
+  },
+  {
+    "filename": "6-STD-B10v5_13-E1.pdf",
+    "title": "6-STD-B10v5_13-E1",
+    "toc": [
+      {
+        "level": 1,
+        "title": "ARIB STD-B10_Version 5.13",
+        "page": 1
+      },
+      {
+        "level": 2,
+        "title": "Foreword",
+        "page": 3
+      },
+      {
+        "level": 2,
+        "title": "TOTAL CONTENTS",
+        "page": 9
+      },
+      {
+        "level": 2,
+        "title": "Part 1 STRUCTURE OF SERVICE INFORMATION ANDOPERATIONAL STANDARD OF IDENTIFIERFOR DIGITAL BROADCASTING",
+        "page": 11
+      },
+      {
+        "level": 3,
+        "title": "CONTENTS",
+        "page": 13
+      },
+      {
+        "level": 3,
+        "title": "1. Purpose",
+        "page": 15
+      },
+      {
+        "level": 3,
+        "title": "2. Scope",
+        "page": 16
+      },
+      {
+        "level": 3,
+        "title": "3. Structure of Service Information",
+        "page": 17
+      },
+      {
+        "level": 3,
+        "title": "4. Types of Service Information",
+        "page": 18
+      },
+      {
+        "level": 4,
+        "title": "4.1 Types of table",
+        "page": 18
+      },
+      {
+        "level": 4,
+        "title": "4.2 Types of descriptor",
+        "page": 20
+      },
+      {
+        "level": 4,
+        "title": "4.3 Types of descriptor used in INT",
+        "page": 23
+      },
+      {
+        "level": 4,
+        "title": "4.4 Types of descriptor used in AIT",
+        "page": 24
+      },
+      {
+        "level": 3,
+        "title": "5. Transmission of service information",
+        "page": 25
+      },
+      {
+        "level": 4,
+        "title": "5.1 PID for tables",
+        "page": 25
+      },
+      {
+        "level": 4,
+        "title": "5.2 Table identifier and transmission standard",
+        "page": 26
+      },
+      {
+        "level": 4,
+        "title": "5.3 Identifier of descriptors",
+        "page": 27
+      },
+      {
+        "level": 4,
+        "title": "5.4 Identifier of descriptors used in INT",
+        "page": 30
+      },
+      {
+        "level": 4,
+        "title": "5.5 Identifier of descriptors used in AIT",
+        "page": 31
+      },
+      {
+        "level": 3,
+        "title": "6. Data structure of Service Information",
+        "page": 32
+      },
+      {
+        "level": 4,
+        "title": "6.1 Data structure of tables",
+        "page": 32
+      },
+      {
+        "level": 4,
+        "title": "6.2 Data structure of descriptor",
+        "page": 42
+      },
+      {
+        "level": 4,
+        "title": "6.3 Data structure of descriptor used in INT",
+        "page": 65
+      },
+      {
+        "level": 3,
+        "title": "7. Operation of identifiers",
+        "page": 67
+      },
+      {
+        "level": 2,
+        "title": "Part 2 DATA STRUCTURE AND DEFINITION OF BASICINFORMATION OF SERVICE INFORMATION",
+        "page": 77
+      },
+      {
+        "level": 3,
+        "title": "CONTENTS",
+        "page": 79
+      },
+      {
+        "level": 3,
+        "title": "1. Purpose",
+        "page": 85
+      },
+      {
+        "level": 3,
+        "title": "2. Scope",
+        "page": 86
+      },
+      {
+        "level": 3,
+        "title": "3. Definitions and abbreviations",
+        "page": 87
+      },
+      {
+        "level": 4,
+        "title": "3.1 Definitions",
+        "page": 87
+      },
+      {
+        "level": 4,
+        "title": "3.2 Abbreviations",
+        "page": 90
+      },
+      {
+        "level": 4,
+        "title": "3.3 Terminology used in Ministerial Ordinances and Notifications",
+        "page": 92
+      },
+      {
+        "level": 3,
+        "title": "4. SI description",
+        "page": 93
+      },
+      {
+        "level": 3,
+        "title": "5. SI tables",
+        "page": 98
+      },
+      {
+        "level": 4,
+        "title": "5.1 SI table mechanism",
+        "page": 98
+      },
+      {
+        "level": 4,
+        "title": "5.2 Table definitions",
+        "page": 102
+      },
+      {
+        "level": 3,
+        "title": "6. Descriptors",
+        "page": 136
+      },
+      {
+        "level": 4,
+        "title": "6.1 Descriptor identification and location",
+        "page": 136
+      },
+      {
+        "level": 4,
+        "title": "6.2 Descriptor coding",
+        "page": 138
+      },
+      {
+        "level": 4,
+        "title": "6.3 Descriptor used in INT",
+        "page": 230
+      },
+      {
+        "level": 3,
+        "title": "Annex A (Normative)",
+        "page": 236
+      },
+      {
+        "level": 3,
+        "title": "Annex B (Normative)",
+        "page": 237
+      },
+      {
+        "level": 3,
+        "title": "Annex C (Informative)",
+        "page": 239
+      },
+      {
+        "level": 3,
+        "title": "Annex D (Informative)",
+        "page": 241
+      },
+      {
+        "level": 3,
+        "title": "Annex E (Informative)",
+        "page": 243
+      },
+      {
+        "level": 3,
+        "title": "Annex F (Informative)",
+        "page": 248
+      },
+      {
+        "level": 3,
+        "title": "Annex G (Normative)",
+        "page": 250
+      },
+      {
+        "level": 3,
+        "title": "Annex H (Normative)",
+        "page": 252
+      },
+      {
+        "level": 3,
+        "title": "Annex J (Informative)",
+        "page": 261
+      },
+      {
+        "level": 3,
+        "title": "Annex K (Normative)",
+        "page": 264
+      },
+      {
+        "level": 3,
+        "title": "Annex L (Normative)",
+        "page": 271
+      },
+      {
+        "level": 3,
+        "title": "Annex M (Informative)",
+        "page": 272
+      },
+      {
+        "level": 3,
+        "title": "Annex N (Informative)",
+        "page": 273
+      },
+      {
+        "level": 3,
+        "title": "Annex O (Normative)",
+        "page": 275
+      },
+      {
+        "level": 3,
+        "title": "Annex P (Informative)",
+        "page": 276
+      },
+      {
+        "level": 3,
+        "title": "Explanation",
+        "page": 277
+      },
+      {
+        "level": 4,
+        "title": "1. How to standardize SI",
+        "page": 277
+      },
+      {
+        "level": 4,
+        "title": "2. Extension of SI and allocation of descriptor",
+        "page": 278
+      },
+      {
+        "level": 4,
+        "title": "3. Extension of SI",
+        "page": 279
+      },
+      {
+        "level": 4,
+        "title": "4. Publication and registration of service provider defined signal",
+        "page": 279
+      },
+      {
+        "level": 4,
+        "title": "5. Operational standard of the identifier",
+        "page": 280
+      },
+      {
+        "level": 3,
+        "title": "Reference materials",
+        "page": 281
+      },
+      {
+        "level": 2,
+        "title": "Part 3 DATA STRUCTURE AND DEFINITION OFEXTENSION INFORMATION OFSERVICE INFORMATION",
+        "page": 285
+      },
+      {
+        "level": 3,
+        "title": "CONTENTS",
+        "page": 287
+      },
+      {
+        "level": 3,
+        "title": "1. Purpose",
+        "page": 289
+      },
+      {
+        "level": 3,
+        "title": "2. Scope",
+        "page": 290
+      },
+      {
+        "level": 3,
+        "title": "3. Definitions and abbreviations",
+        "page": 291
+      },
+      {
+        "level": 4,
+        "title": "3.1 Definitions",
+        "page": 291
+      },
+      {
+        "level": 4,
+        "title": "3.2 Abbreviations",
+        "page": 291
+      },
+      {
+        "level": 3,
+        "title": "4. Explanation of extension information of SI",
+        "page": 292
+      },
+      {
+        "level": 4,
+        "title": "4.1 Organization of extension information of SI",
+        "page": 292
+      },
+      {
+        "level": 4,
+        "title": "4.2 Program group index",
+        "page": 293
+      },
+      {
+        "level": 4,
+        "title": "4.3 Program segment index",
+        "page": 294
+      },
+      {
+        "level": 3,
+        "title": "5. Program index encoding method",
+        "page": 296
+      },
+      {
+        "level": 4,
+        "title": "5.1 Table used for program index encoding",
+        "page": 296
+      },
+      {
+        "level": 4,
+        "title": "5.2 Descriptor used for program index encoding",
+        "page": 304
+      },
+      {
+        "level": 3,
+        "title": "6. Program index transmission system",
+        "page": 318
+      },
+      {
+        "level": 4,
+        "title": "6.1 Transmission of program group index",
+        "page": 318
+      },
+      {
+        "level": 4,
+        "title": "6.2 Transmission in program segment index",
+        "page": 318
+      },
+      {
+        "level": 4,
+        "title": "6.3 Identifier used for transmission of program index",
+        "page": 319
+      },
+      {
+        "level": 4,
+        "title": "6.4 Descriptor used for program index transmission",
+        "page": 320
+      },
+      {
+        "level": 3,
+        "title": "Annex A (Normative)",
+        "page": 323
+      },
+      {
+        "level": 3,
+        "title": "Annex B (Normative)",
+        "page": 327
+      },
+      {
+        "level": 3,
+        "title": "Reference materials",
+        "page": 328
+      },
+      {
+        "level": 2,
+        "title": "Appendix GUIDELINE FOR THE OPERATION METHOD OF SI (SERVICE INFORMATION)",
+        "page": 329
+      },
+      {
+        "level": 3,
+        "title": "CONTENTS",
+        "page": 331
+      },
+      {
+        "level": 3,
+        "title": "Preface",
+        "page": 337
+      },
+      {
+        "level": 3,
+        "title": "1. How to use SI table",
+        "page": 338
+      },
+      {
+        "level": 4,
+        "title": "1.1 Network Information Table (NIT) information",
+        "page": 338
+      },
+      {
+        "level": 4,
+        "title": "1.2 Bouquet Association Table (BAT) information",
+        "page": 339
+      },
+      {
+        "level": 4,
+        "title": "1.3 Service Description Table (SDT) information",
+        "page": 340
+      },
+      {
+        "level": 4,
+        "title": "1.4 Event Information Table (EIT) information",
+        "page": 340
+      },
+      {
+        "level": 4,
+        "title": "1.5 Time and Date Table (TDT)",
+        "page": 344
+      },
+      {
+        "level": 4,
+        "title": "1.6 Time and Data Offset Table (TOT)",
+        "page": 345
+      },
+      {
+        "level": 4,
+        "title": "1.7 Running Status Table (RST)",
+        "page": 345
+      },
+      {
+        "level": 4,
+        "title": "1.8 Stuffing Table (ST)",
+        "page": 346
+      },
+      {
+        "level": 4,
+        "title": "1.9 Partial Contents Announcement Table (PCAT)",
+        "page": 346
+      },
+      {
+        "level": 4,
+        "title": "1.10 Broadcaster Information Table (BIT)",
+        "page": 347
+      },
+      {
+        "level": 4,
+        "title": "1.11 Network Board Information Table (NBIT)",
+        "page": 348
+      },
+      {
+        "level": 4,
+        "title": "1.12 Linkage Description Table (LDT)",
+        "page": 348
+      },
+      {
+        "level": 4,
+        "title": "1.13 Address Map Table (AMT)",
+        "page": 348
+      },
+      {
+        "level": 4,
+        "title": "1.14 IP/MAC Notification Table (INT)",
+        "page": 350
+      },
+      {
+        "level": 4,
+        "title": "1.15 Table Updating Mechanism",
+        "page": 351
+      },
+      {
+        "level": 3,
+        "title": "2. SI descriptor allocation and usage",
+        "page": 352
+      },
+      {
+        "level": 4,
+        "title": "2.1 Descriptors of the Network Information Table (NIT)",
+        "page": 352
+      },
+      {
+        "level": 4,
+        "title": "2.2 Bouquet association table descriptor",
+        "page": 354
+      },
+      {
+        "level": 4,
+        "title": "2.3 Service description table descriptor",
+        "page": 356
+      },
+      {
+        "level": 4,
+        "title": "2.4 Descriptors of the Event Information Table (EIT)",
+        "page": 360
+      },
+      {
+        "level": 4,
+        "title": "2.5 Descriptors of the Program Map Table (PMT)",
+        "page": 364
+      },
+      {
+        "level": 4,
+        "title": "2.6 Descriptors of the Time Offset Table",
+        "page": 367
+      },
+      {
+        "level": 4,
+        "title": "2.7 Stuffing descriptor",
+        "page": 368
+      },
+      {
+        "level": 4,
+        "title": "2.8 ISO 13818-1 descriptors",
+        "page": 368
+      },
+      {
+        "level": 4,
+        "title": "2.9 Unknown descriptors",
+        "page": 368
+      },
+      {
+        "level": 4,
+        "title": "2.10 Broadcaster information table descriptor",
+        "page": 368
+      },
+      {
+        "level": 4,
+        "title": "2.11 Network board information table descriptor",
+        "page": 371
+      },
+      {
+        "level": 4,
+        "title": "2.12 Linkage description table descriptor",
+        "page": 371
+      },
+      {
+        "level": 4,
+        "title": "2.13 Descriptor used in INT",
+        "page": 371
+      },
+      {
+        "level": 3,
+        "title": "3. Program Specific Information (PSI) and SI operational interaction states",
+        "page": 373
+      },
+      {
+        "level": 3,
+        "title": "4. Application",
+        "page": 374
+      },
+      {
+        "level": 4,
+        "title": "4.1 NVOD service",
+        "page": 374
+      },
+      {
+        "level": 4,
+        "title": "4.2 Mosaic services",
+        "page": 376
+      },
+      {
+        "level": 4,
+        "title": "4.3 Transitions at broadcast delivery media boundaries",
+        "page": 379
+      },
+      {
+        "level": 4,
+        "title": "4.4 Mixed multiple programming (Madara-broadcasting)",
+        "page": 381
+      },
+      {
+        "level": 3,
+        "title": "Postscript",
+        "page": 386
+      }
+    ]
   }
 ]

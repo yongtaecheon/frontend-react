@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 export const useDocumentHandler = () => {
   const [documents, setDocuments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const loadDocuments = async () => {
+  const loadDocuments = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:8000/api/documents");
       const rawDocuments = response.data;
@@ -22,11 +22,11 @@ export const useDocumentHandler = () => {
     } catch (error) {
       console.error("Error loading documents:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadDocuments();
-  }, []);
+  }, [loadDocuments]);
 
   return {
     documents,

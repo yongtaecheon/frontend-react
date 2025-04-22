@@ -8,6 +8,12 @@ const LeftPanel = ({
   currentPdfFile,
   onDocumentClick,
 }) => {
+  const isCurrentDocument = (doc) => {
+    if (!currentPdfFile || !doc) return false;
+    const currentFileName = currentPdfFile.split('/').pop();
+    return doc.filename === currentFileName;
+  };
+
   return (
     <div className={`left-panel ${isPanelCollapsed ? "collapsed" : ""}`}>
       <div className="left-panel-header">
@@ -28,7 +34,7 @@ const LeftPanel = ({
         {documents.map((doc, index) => (
           <div
             key={index}
-            className={`document-item ${currentPdfFile === `/uploads/${doc.filename}` ? "active" : ""}`}
+            className={`document-item ${isCurrentDocument(doc) ? "active" : ""}`}
             onClick={() => onDocumentClick(doc)}
           >
             {doc.title}

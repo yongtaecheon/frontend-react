@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { pdfjs } from "react-pdf";
 import LandingPage from "./components/LandingPage";
 import LeftPanel from "./components/LeftPanel";
@@ -15,6 +15,7 @@ function App() {
   const [isAppActive, setIsAppActive] = useState(false);
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
   const [toc, setToc] = useState([]);
+  const pdfViewerRef = useRef(null);
 
   const {
     pdfFile,
@@ -29,21 +30,38 @@ function App() {
     handleDocumentClick,
   } = usePdfHandler();
 
-  const { chatHistory, chatContainerRef, resetChat, handleOptionClick } = useChatHandler(toc, handleTocClick);
+  const handlePageNavigation = (page) => {
+    // Find the page element and scroll to it instantly
+    const pageElement = document.querySelector(`[data-page-number="${page}"]`);
+    if (pageElement) {
+      pageElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+    if (pdfViewerRef.current) {
+      pdfViewerRef.current.goToPage(page);
+    }
+  };
+
+  const { chatHistory, chatContainerRef, resetChat, handleOptionClick } = useChatHandler(toc, handlePageNavigation);
 
   const { documents, loadDocuments } = useDocumentHandler();
+  const [shouldResetChat, setShouldResetChat] = useState(false);
+
+  const handleLoadDocuments = useCallback(async () => {
+    await loadDocuments();
+  }, [loadDocuments]);
 
   useEffect(() => {
     if (isAppActive) {
-      loadDocuments();
+      handleLoadDocuments();
     }
-  }, [isAppActive, loadDocuments]);
+  }, [isAppActive, handleLoadDocuments]);
 
   useEffect(() => {
-    if (toc.length > 0) {
+    if (toc.length > 0 && shouldResetChat) {
       resetChat();
+      setShouldResetChat(false);
     }
-  }, [toc, resetChat]);
+  }, [toc, resetChat, shouldResetChat]);
 
   const onFileChange = async (event) => {
     const file = event.target.files[0];
@@ -51,6 +69,7 @@ function App() {
       const newToc = await processFile(file);
       setToc(newToc);
       setIsAppActive(true);
+      setShouldResetChat(true);
     } catch (error) {
       alert("파일 업로드 또는 처리 중 오류가 발생했습니다.");
     }
@@ -61,6 +80,7 @@ function App() {
     const newToc = handleDocumentClick(document);
     setToc(newToc);
     setIsAppActive(true);
+    setShouldResetChat(true);
   };
 
   if (!isAppActive) {
@@ -83,6 +103,7 @@ function App() {
       <div className="center-panel">
         {pdfFile ? (
           <PdfViewer
+            ref={pdfViewerRef}
             pdfFile={pdfFile}
             pdfKey={pdfKey}
             numPages={numPages}
