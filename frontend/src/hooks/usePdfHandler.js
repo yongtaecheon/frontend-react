@@ -51,7 +51,7 @@ export const usePdfHandler = () => {
     const fileUrl = `http://localhost:8000/uploads/${document.filename}`;
     setPdfFile(fileUrl);
     setPdfKey((prev) => prev + 1);
-    setPageNumber(1);
+    setPageNumber(0);
     setScale(1.0);
     return document.toc;
   }, []);
@@ -59,6 +59,7 @@ export const usePdfHandler = () => {
   return {
     pdfFile,
     pdfKey,
+    setPdfKey,
     numPages,
     pageNumber,
     scale,

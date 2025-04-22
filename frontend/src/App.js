@@ -33,6 +33,7 @@ function App() {
     onDocumentLoadSuccess,
     handleTocClick,
     handleDocumentClick,
+    setPdfKey,
   } = usePdfHandler();
 
   const handlePageNavigation = (page) => {
@@ -62,11 +63,11 @@ function App() {
   }, [isAppActive, handleLoadDocuments]);
 
   useEffect(() => {
-    if (toc.length > 0 && shouldResetChat) {
+    if (shouldResetChat) {
       resetChat();
       setShouldResetChat(false);
     }
-  }, [toc, resetChat, shouldResetChat]);
+  }, [toc, shouldResetChat, resetChat]);
 
   const onFileChange = async (event) => {
     const file = event.target.files[0];
@@ -75,17 +76,22 @@ function App() {
       setToc(newToc);
       setIsAppActive(true);
       setShouldResetChat(true);
+      await handleLoadDocuments();
     } catch (error) {
       alert("파일 업로드 또는 처리 중 오류가 발생했습니다.");
     }
     event.target.value = null;
   };
 
-  const onDocumentSelect = (document) => {
+  const onDocumentSelect = async (document) => {
     const newToc = handleDocumentClick(document);
     setToc(newToc);
     setIsAppActive(true);
     setShouldResetChat(true);
+    setPdfKey((prev) => prev + 1);
+    if (pdfViewerRef.current) {
+      pdfViewerRef.current.goToPage(1);
+    }
   };
 
   if (!isAppActive) {
