@@ -25,12 +25,12 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
 
   const renderPage = async (num) => {
     if (!pdfDoc) return;
-    
+
     setPageRendering(true);
     try {
       const page = await pdfDoc.getPage(num);
       setCurrentPageObj(page);
-      
+
       const viewport = page.getViewport({ scale });
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
@@ -43,12 +43,12 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       };
 
       await page.render(renderContext).promise;
-      
+
       // 텍스트 레이어 렌더링
       const textLayer = textLayerRef.current;
       textLayer.style.height = `${viewport.height}px`;
       textLayer.style.width = `${viewport.width}px`;
-      
+
       const textContent = await page.getTextContent();
       pdfjsLib.renderTextLayer({
         textContent: textContent,
@@ -56,9 +56,9 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
         viewport: viewport,
         textDivs: []
       });
-      
+
       setPageRendering(false);
-      
+
       if (pageNumPending !== null) {
         setCurrentPage(pageNumPending);
         setPageNumPending(null);
@@ -76,6 +76,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
         const loadingTask = pdfjsLib.getDocument(pdfFile);
         const pdf = await loadingTask.promise;
         setPdfDoc(pdf);
+        setCurrentPage(1);
         if (onDocumentLoadSuccess) {
           onDocumentLoadSuccess({ numPages: pdf.numPages });
         }

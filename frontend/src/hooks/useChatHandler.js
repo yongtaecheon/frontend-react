@@ -12,21 +12,27 @@ export const useChatHandler = (toc, handleTocClick) => {
 
   const resetChat = () => {
     setChatHistory([]);
-    
+
+    // TOC가 비어있으면 빈 키워드를 보여줍니다.
+    if (!toc || toc.length === 0) {
+      setChatHistory([
+        {
+          type: "bot",
+          content: "목차가 없습니다.",
+          options: [],
+        },
+      ]);
+      return;
+    }
+
     // Find all level 2 items (first actual TOC items)
     const topLevelItems = toc.filter(item => item.level === 2);
-    
+
     if (topLevelItems.length > 0) {
       setChatHistory([
         {
           type: "bot",
-          content: (
-            <div>
-              <span>
-                목차 키워드를 선택하세요 <span className="material-symbols-outlined">pets</span>
-              </span>
-            </div>
-          ),
+          content: "목차 키워드를 선택하세요",
           options: topLevelItems.map((item) => ({
             text: item.title,
             page: item.page,
@@ -40,13 +46,7 @@ export const useChatHandler = (toc, handleTocClick) => {
       setChatHistory([
         {
           type: "bot",
-          content: (
-            <div>
-              <span>
-                목차 키워드를 선택하세요 <span className="material-symbols-outlined">pets</span>
-              </span>
-            </div>
-          ),
+          content: "목차 키워드를 선택하세요",
           options: nonTitleItems.map((item) => ({
             text: item.title,
             page: item.page,
