@@ -726,10 +726,7 @@ body {
 }
 
 .textLayer .highlight {
-  background-color: rgba(255, 255, 0);
-  border-radius: 3px;
-  padding: 0 2px;
-  margin: 0 -2px;
+  background-color: rgba(255, 255, 0, 0.4);
 }
 
 .textLayer .highlight.begin {
@@ -746,4 +743,73 @@ body {
 
 .textLayer .highlight.selected {
   background-color: rgb(0, 100, 0);
+}
+
+.textLayer .highlight.search {
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.textLayer .highlight.search.current {
+  background-color: rgba(255, 0, 0, 0.8);
+}
+
+/* Search styles */
+.search-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 300px;
+  margin-top: 4px;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-button,
+.search-nav-button {
+  padding: 4px 8px;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button:hover,
+.search-nav-button:hover {
+  background-color: #f5f5f5;
+}
+
+.search-button:disabled,
+.search-nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.search-count {
+  font-size: 12px;
+  color: #666;
+  margin-left: 8px;
 }
