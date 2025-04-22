@@ -7,7 +7,6 @@ import ChatPanel from "./components/ChatPanel";
 import { usePdfHandler } from "./hooks/usePdfHandler";
 import { useChatHandler } from "./hooks/useChatHandler";
 import { useDocumentHandler } from "./hooks/useDocumentHandler";
-import "./App.css";
 import "./styles/global.css";
 import "./styles/components/MainLayout.css";
 import "./styles/components/LandingPage.css";
