@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
 
 // For Testing
 const MOCK_RESPONSIBLE_PERSONS = {
@@ -47,12 +46,60 @@ const MOCK_RESPONSIBLE_PERSONS = {
   }
 };
 
+// Jira 이슈 목데이터
+const MOCK_JIRA_ISSUES = {
+  "Foreword": [
+    {
+      title: "서문 검토 필요",
+      url: "https://jira.example.com/browse/PROJ-123"
+    }
+  ],
+  "TOTAL CONTENTS": [
+    {
+      title: "목차 구조 개선",
+      url: "https://jira.example.com/browse/PROJ-124"
+    }
+  ],
+  "1. Purpose": [
+    {
+      title: "목적 섹션 업데이트",
+      url: "https://jira.example.com/browse/PROJ-125"
+    }
+  ],
+  "2. Scope": [
+    {
+      title: "범위 정의 검토",
+      url: "https://jira.example.com/browse/PROJ-126"
+    }
+  ],
+  "3. References": [
+    {
+      title: "참조 문서 추가",
+      url: "https://jira.example.com/browse/PROJ-127"
+    }
+  ],
+  "4. Terms and definitions": [
+    {
+      title: "용어 정의 업데이트",
+      url: "https://jira.example.com/browse/PROJ-128"
+    }
+  ],
+  "5. Conventions": [
+    {
+      title: "규칙 검토",
+      url: "https://jira.example.com/browse/PROJ-129"
+    }
+  ]
+};
+
 export const useChatHandler = (toc, handlePageNavigation) => {
   const [chatHistory, setChatHistory] = useState([]);
   const chatContainerRef = useRef(null);
   const [selectedKeyword, setSelectedKeyword] = useState(null);
   const [responsiblePerson, setResponsiblePerson] = useState(null);
   const [isLoadingPerson, setIsLoadingPerson] = useState(false);
+  const [jiraIssues, setJiraIssues] = useState(null);
+  const [isLoadingJira, setIsLoadingJira] = useState(false);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -254,14 +301,87 @@ export const useChatHandler = (toc, handlePageNavigation) => {
     }
   };
 
+  // Jira 이슈 정보를 가져오는 함수
+  const fetchJiraIssues = async (message) => {
+    if (!message) {
+      setJiraIssues(null);
+      return;
+    }
+    
+    setIsLoadingJira(true);
+    try {
+      // 메시지의 모든 options에서 text를 키워드로 사용
+      const keywords = message.options?.map(option => option.text) || [];
+      
+      // 메시지 내용에서도 키워드 추출 (문자열인 경우)
+      if (typeof message.content === 'string') {
+        // 메시지 내용이 "(으)로 이동했습니다." 형식인 경우 처리
+        const match = message.content.match(/^(.*?)\(으\)로 이동했습니다\.$/);
+        if (match && match[1]) {
+          keywords.push(match[1]);
+        } else {
+          // 그 외의 경우 메시지 내용을 키워드로 추가
+          keywords.push(message.content);
+        }
+      }
+      
+      if (keywords.length === 0) {
+        setJiraIssues(null);
+        return;
+      }
+
+      // 중복된 키워드 제거
+      const uniqueKeywords = [...new Set(keywords)];
+
+      // 목데이터에서 일치하는 모든 Jira 이슈 찾기
+      const issues = uniqueKeywords
+        .map(keyword => {
+          const issueList = MOCK_JIRA_ISSUES[keyword];
+          if (issueList) {
+            return { keyword, issues: issueList };
+          }
+          return undefined;
+        })
+        .filter(item => item !== undefined);
+      
+      // 실제 API 호출 대신 setTimeout으로 지연 효과 추가
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      if (issues.length > 0) {
+        setJiraIssues(issues);
+      } else {
+        setJiraIssues(null);
+      }
+    } catch (error) {
+      console.error("Error fetching Jira issues:", error);
+      setJiraIssues(null);
+    } finally {
+      setIsLoadingJira(false);
+    }
+  };
+
+  // Jira 아이콘 클릭 핸들러
+  const handleJiraIconClick = (message) => {
+    if (!message) {
+      setJiraIssues(null);
+      setSelectedKeyword(null);
+      return;
+    }
+    setSelectedKeyword(message);
+    fetchJiraIssues(message);
+  };
+
   return {
     chatHistory,
     chatContainerRef,
     resetChat,
     handleOptionClick,
     handleIconClick,
+    handleJiraIconClick,
     selectedKeyword,
     responsiblePerson,
-    isLoadingPerson
+    isLoadingPerson,
+    jiraIssues,
+    isLoadingJira
   };
 };

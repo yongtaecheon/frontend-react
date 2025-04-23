@@ -1,6 +1,17 @@
 import React, { forwardRef, useState } from "react";
 
-const ChatPanel = forwardRef(({ chatHistory, onOptionClick, toc, handleIconClick, responsiblePerson, isLoadingPerson, selectedKeyword }, ref) => {
+const ChatPanel = forwardRef(({ 
+  chatHistory, 
+  onOptionClick, 
+  toc, 
+  handleIconClick, 
+  handleJiraIconClick,
+  responsiblePerson, 
+  isLoadingPerson,
+  selectedKeyword,
+  jiraIssues,
+  isLoadingJira
+}, ref) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e) => {
@@ -26,11 +37,11 @@ const ChatPanel = forwardRef(({ chatHistory, onOptionClick, toc, handleIconClick
             <div className="bot-message-content">
               <div className="bot-message-text">{message.content}</div>
               <div className="message-icons">
-                <div className="jira-icon">
+                <div className="jira-icon" onClick={() => handleJiraIconClick(message)}>
                   <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
-                      <desc>Jira Streamline Icon: https://streamlinehq.com</desc>
-                      <title>Jira</title>
-                      <path d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0 -1.005 -1.005zm5.723 -5.756H5.736a5.215 5.215 0 0 0 5.215 5.214h2.129v2.058a5.218 5.218 0 0 0 5.215 5.214V6.758a1.001 1.001 0 0 0 -1.001 -1.001zM23.013 0H11.455a5.215 5.215 0 0 0 5.215 5.215h2.129v2.057A5.215 5.215 0 0 0 24 12.483V1.005A1.001 1.001 0 0 0 23.013 0Z" fill="#000000" strokeWidth="1"></path>
+                    <desc>Jira Streamline Icon: https://streamlinehq.com</desc>
+                    <title>Jira</title>
+                    <path d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0 -1.005 -1.005zm5.723 -5.756H5.736a5.215 5.215 0 0 0 5.215 5.214h2.129v2.058a5.218 5.218 0 0 0 5.215 5.214V6.758a1.001 1.001 0 0 0 -1.001 -1.001zM23.013 0H11.455a5.215 5.215 0 0 0 5.215 5.215h2.129v2.057A5.215 5.215 0 0 0 24 12.483V1.005A1.001 1.001 0 0 0 23.013 0Z" fill="#000000" strokeWidth="1"></path>
                   </svg>
                 </div>
                 <div className="message-icon" onClick={() => handleIconClick(message)}>
@@ -62,89 +73,133 @@ const ChatPanel = forwardRef(({ chatHistory, onOptionClick, toc, handleIconClick
     return (
       <div className="chat-container responsible-person-view">
         <div className="loading-person full-screen">
-          <div className="loading-spinner"></div>
           <span>담당자 정보를 불러오는 중...</span>
         </div>
       </div>
     );
   }
 
-  if (selectedKeyword) {
+  if (isLoadingJira) {
     return (
-      <div className="chat-container responsible-person-view">
-        <div className="responsible-person-info full-screen">
-          <div className="responsible-person-header">
-            <span className="material-symbols-outlined">person</span>
-            <h3>담당자 정보</h3>
-            <button className="close-button" onClick={() => handleIconClick(null)}>
-              <span className="material-symbols-outlined">close</span>
-            </button>
-          </div>
-          <div className="responsible-person-content">
-            {responsiblePerson ? (
-              Array.isArray(responsiblePerson) ? (
-                responsiblePerson.length > 0 ? (
-                  responsiblePerson.map((person, index) => (
-                    <div key={index} className="person-info-section">
-                      <div className="person-keyword">{person.keyword}</div>
-                      <div className="info-item">
-                        <span className="info-label">이름:</span>
-                        <span className="info-value">{person.name}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">팀:</span>
-                        <span className="info-value">{person.team}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">역할:</span>
-                        <span className="info-value">{person.role}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">전화번호:</span>
-                        <span className="info-value">{person.phoneNumber}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="info-label">이메일:</span>
-                        <span className="info-value">{person.email}</span>
-                      </div>
-                      {index < responsiblePerson.length - 1 && <hr className="person-divider" />}
-                    </div>
-                  ))
-                ) : (
-                  <div className="no-person-message">담당자가 없습니다.</div>
-                )
-              ) : (
-                <div className="person-info-section">
-                  <div className="person-keyword">{responsiblePerson.keyword}</div>
-                  <div className="info-item">
-                    <span className="info-label">이름:</span>
-                    <span className="info-value">{responsiblePerson.name}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">팀:</span>
-                    <span className="info-value">{responsiblePerson.team}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">역할:</span>
-                    <span className="info-value">{responsiblePerson.role}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">전화번호:</span>
-                    <span className="info-value">{responsiblePerson.phoneNumber}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">이메일:</span>
-                    <span className="info-value">{responsiblePerson.email}</span>
-                  </div>
-                </div>
-              )
-            ) : (
-              <div className="no-person-message">담당자가 없습니다.</div>
-            )}
-          </div>
+      <div className="chat-container jira-issues-view">
+        <div className="loading-person full-screen">
+          <span>Jira 이슈를 불러오는 중...</span>
         </div>
       </div>
     );
+  }
+
+  if (selectedKeyword) {
+    if (responsiblePerson) {
+      return (
+        <div className="chat-container responsible-person-view">
+          <div className="responsible-person-info full-screen">
+            <div className="responsible-person-header">
+              <span className="material-symbols-outlined">person</span>
+              <h3>담당자 정보</h3>
+              <button className="close-button" onClick={() => handleIconClick(null)}>
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <div className="responsible-person-content">
+              {responsiblePerson ? (
+                Array.isArray(responsiblePerson) ? (
+                  responsiblePerson.length > 0 ? (
+                    responsiblePerson.map((person, index) => (
+                      <div key={index} className="person-info-section">
+                        <div className="person-keyword">{person.keyword}</div>
+                        <div className="info-item">
+                          <span className="info-label">이름:</span>
+                          <span className="info-value">{person.name}</span>
+                        </div>
+                        <div className="info-item">
+                          <span className="info-label">팀:</span>
+                          <span className="info-value">{person.team}</span>
+                        </div>
+                        <div className="info-item">
+                          <span className="info-label">역할:</span>
+                          <span className="info-value">{person.role}</span>
+                        </div>
+                        <div className="info-item">
+                          <span className="info-label">전화번호:</span>
+                          <span className="info-value">{person.phoneNumber}</span>
+                        </div>
+                        <div className="info-item">
+                          <span className="info-label">이메일:</span>
+                          <span className="info-value">{person.email}</span>
+                        </div>
+                        {index < responsiblePerson.length - 1 && <hr className="person-divider" />}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="no-person-message">담당자가 없습니다.</div>
+                  )
+                ) : (
+                  <div className="person-info-section">
+                    <div className="person-keyword">{responsiblePerson.keyword}</div>
+                    <div className="info-item">
+                      <span className="info-label">이름:</span>
+                      <span className="info-value">{responsiblePerson.name}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">팀:</span>
+                      <span className="info-value">{responsiblePerson.team}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">역할:</span>
+                      <span className="info-value">{responsiblePerson.role}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">전화번호:</span>
+                      <span className="info-value">{responsiblePerson.phoneNumber}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">이메일:</span>
+                      <span className="info-value">{responsiblePerson.email}</span>
+                    </div>
+                  </div>
+                )
+              ) : (
+                <div className="no-person-message">담당자가 없습니다.</div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    } else if (jiraIssues) {
+      return (
+        <div className="chat-container jira-issues-view">
+          <div className="jira-issues-info full-screen">
+            <div className="jira-issues-header">
+              <span className="material-symbols-outlined">bug_report</span>
+              <h3>관련 Jira 이슈</h3>
+              <button className="close-button" onClick={() => handleJiraIconClick(null)}>
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <div className="jira-issues-content">
+              {jiraIssues.length > 0 ? (
+                jiraIssues.map((item, index) => (
+                  <div key={index} className="jira-issue-section">
+                    <div className="jira-keyword">{item.keyword}</div>
+                    {item.issues.map((issue, issueIndex) => (
+                      <div key={issueIndex} className="issue-item">
+                        <a href={issue.url} target="_blank" rel="noopener noreferrer" className="issue-title">
+                          {issue.title}
+                        </a>
+                      </div>
+                    ))}
+                    {index < jiraIssues.length - 1 && <hr className="issue-divider" />}
+                  </div>
+                ))
+              ) : (
+                <div className="no-issue-message">Jira 이슈가 없습니다.</div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
 
   return (

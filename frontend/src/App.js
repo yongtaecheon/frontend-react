@@ -58,9 +58,12 @@ function App() {
     resetChat, 
     handleOptionClick,
     handleIconClick,
+    handleJiraIconClick,
     responsiblePerson,
     isLoadingPerson,
-    selectedKeyword
+    selectedKeyword,
+    jiraIssues,
+    isLoadingJira
   } = useChatHandler(toc, handlePageNavigation);
 
   const { documents, loadDocuments } = useDocumentHandler();
@@ -204,9 +207,12 @@ function App() {
           ref={chatContainerRef} 
           toc={toc}
           handleIconClick={handleIconClick}
+          handleJiraIconClick={handleJiraIconClick}
           responsiblePerson={responsiblePerson}
           isLoadingPerson={isLoadingPerson}
           selectedKeyword={selectedKeyword}
+          jiraIssues={jiraIssues}
+          isLoadingJira={isLoadingJira}
         />
       </div>
     </div>
