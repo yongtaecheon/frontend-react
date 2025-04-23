@@ -119,15 +119,16 @@
 }
 
 .panel-image {
-  width: 100%;
+  width: 80%;
   height: auto;
   display: block;
   pointer-events: none;
   z-index: 2;
+  margin: 0 auto;
 }
 
 .documents-list {
-  margin-top: -17%;
+  margin-top: -14%;
   overflow-y: auto;
   background-color: var(--color-light-gray);
   height: 100%;

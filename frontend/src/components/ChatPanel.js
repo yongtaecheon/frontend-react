@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useState, useRef, useEffect } from "react";
 
 const ChatPanel = forwardRef(({ 
   chatHistory, 
@@ -13,6 +13,8 @@ const ChatPanel = forwardRef(({
   isLoadingJira
 }, ref) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [hasOverflow, setHasOverflow] = useState(false);
+  const keywordButtonsRef = useRef(null);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -25,6 +27,13 @@ const ChatPanel = forwardRef(({
       page: item.page,
       level: item.level,
     }));
+
+  useEffect(() => {
+    if (keywordButtonsRef.current) {
+      const hasScrollbar = keywordButtonsRef.current.scrollHeight > keywordButtonsRef.current.clientHeight;
+      setHasOverflow(hasScrollbar);
+    }
+  }, [filteredKeywords]);
 
   const chatContainer = [];
   chatHistory.map((message, index) => {
@@ -223,7 +232,7 @@ const ChatPanel = forwardRef(({
           </button>
         </div>
         {searchQuery && (
-          <div className="keyword-buttons">
+          <div className={`keyword-buttons ${hasOverflow ? 'overflow' : ''}`} ref={keywordButtonsRef}>
             {filteredKeywords.map((keyword, index) => (
               <button
                 key={index}
