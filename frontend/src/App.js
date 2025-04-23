@@ -13,6 +13,7 @@ import "./styles/components/MainLayout.css";
 import "./styles/components/LandingPage.css";
 import "./styles/components/Chat.css";
 import "./styles/components/PDFViewer.css";
+import axios from "axios";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -35,6 +36,7 @@ function App() {
     handleTocClick,
     handleDocumentClick,
     setPdfKey,
+    setPdfFile,
   } = usePdfHandler();
 
   const handlePageNavigation = (page, keyword) => {
@@ -99,6 +101,54 @@ function App() {
     }
   };
 
+  const updateDocumentTitle = async (doc, newTitle) => {
+    try {
+      // 서버에 제목 변경 요청 보내기
+      const response = await axios.put(`http://localhost:8000/api/documents/${doc.filename}`, {
+        title: newTitle
+      });
+      
+      if (response.status === 200) {
+        // 성공적으로 업데이트되면 문서 목록 다시 로드
+        await handleLoadDocuments();
+        return true;
+      }
+    } catch (error) {
+      console.error("Error updating document title:", error);
+      alert("문서 제목 변경 중 오류가 발생했습니다.");
+    }
+    return false;
+  };
+
+  const deleteDocument = async (doc) => {
+    try {
+      // 삭제 확인
+      if (!window.confirm(`"${doc.title}" 문서를 삭제하시겠습니까?`)) {
+        return false;
+      }
+      
+      // 서버에 삭제 요청 보내기
+      const response = await axios.delete(`http://localhost:8000/api/documents/${doc.filename}`);
+      
+      if (response.status === 200) {
+        // 성공적으로 삭제되면 문서 목록 다시 로드
+        await handleLoadDocuments();
+        
+        // 현재 선택된 문서가 삭제된 경우 처리
+        if (pdfFile && pdfFile.includes(doc.filename)) {
+          setPdfFile(null);
+          setToc([]);
+        }
+        
+        return true;
+      }
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      alert("문서 삭제 중 오류가 발생했습니다.");
+    }
+    return false;
+  };
+
   if (!isAppActive) {
     return <LandingPage onFileChange={onFileChange} isLoading={pdfLoading} />;
   }
@@ -112,6 +162,8 @@ function App() {
         documents={documents}
         currentPdfFile={pdfFile}
         onDocumentClick={onDocumentSelect}
+        onUpdateDocumentTitle={updateDocumentTitle}
+        onDeleteDocument={deleteDocument}
       />
       {isPanelCollapsed && (
         <div className="collapsed-panel-indicator" onClick={() => setIsPanelCollapsed(false)}>

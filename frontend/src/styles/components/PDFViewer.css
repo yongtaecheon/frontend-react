@@ -184,24 +184,75 @@
   right: 0;
   bottom: 0;
   z-index: 1;
+  opacity: 0.2;
+  mix-blend-mode: multiply;
+  pointer-events: none;
 }
 
 .react-pdf__Page__textContent span {
-  color: black;
-  cursor: text;
-}
-
-.react-pdf__Page__textContent span::selection {
-  background: rgba(255, 200, 100, 0.6);
   color: transparent;
+  pointer-events: none;
+  user-select: none;
 }
 
-/* Firefox를 위한 별도 스타일 */
-.react-pdf__Page__textContent span::-moz-selection {
-  background: rgba(255, 200, 100, 0.6);
-  color: transparent;
+.highlight {
+  background-color: rgb(255, 255, 0);
+  border-radius: 2px;
+  padding: 0 2px;
+  margin: 0 -2px;
+  display: inline;
+  line-height: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  color: black !important;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+  user-select: text;
+  mix-blend-mode: normal;
+  opacity: 1;
 }
 
+.highlight.search {
+  background-color: rgb(125, 200, 100,0.4);
+  border-radius: 2px;
+  padding: 0 2px;
+  margin: 0 -2px;
+  display: inline;
+  line-height: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  color: black !important;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+  user-select: text;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+.highlight.search.current {
+  background-color: rgb(70, 150, 50);
+  border-radius: 2px;
+  padding: 0 2px;
+  margin: 0 -2px;
+  display: inline;
+  line-height: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  color: black !important;
+  position: relative;
+  z-index: 11;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  user-select: text;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+/* 텍스트 레이어 스타일 조정 */
 .textLayer {
   position: absolute;
   text-align: initial;
@@ -215,6 +266,9 @@
   -webkit-text-size-adjust: none;
   -webkit-transform-origin: 0% 0%;
   transform-origin: 0% 0%;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 .textLayer > span {
@@ -223,13 +277,15 @@
   white-space: pre;
   cursor: text;
   transform-origin: 0% 0%;
+  pointer-events: none;
+  user-select: none;
 }
 
 .textLayer .highlight {
-  margin: -1px;
-  padding: 1px;
-  background-color: rgb(180, 0, 170);
-  border-radius: 4px;
+  pointer-events: auto;
+  user-select: text;
+  mix-blend-mode: normal;
+  opacity: 1;
 }
 
 .textLayer .highlight.begin {
@@ -261,15 +317,6 @@
   }
 }
 
-textLayer .highlight.search {
-  background-color: rgba(255, 0, 0, 0.2);
-}
-
-.textLayer .highlight.search.current {
-  background-color: rgba(255, 0, 0, 0.8);
-}
-
-/* Search styles */
 .search-container {
   position: absolute;
   top: 100%;

@@ -156,7 +156,12 @@
   transition: background-color 0.2s ease, border-left-color 0.2s ease;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
   position: relative;
+  max-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .document-item:hover {
@@ -164,8 +169,87 @@
   transition: background-color 0.5s ease;
 }
 
+.document-item:hover::after {
+  content: attr(data-filename);
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background-color: white;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  border: 1px solid #ddd;
+  display: block;
+  min-width: 200px;
+  max-width: 300px;
+  word-break: break-all;
+}
+
 .document-item.active {
   background-color: var(--color-focus);
   font-weight: 500;
   border-left-color: var(--color-button-dim);
+}
+
+.document-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 8px;
+}
+
+.document-title-input {
+  flex: 1;
+  margin-right: 8px;
+  padding: 4px 8px;
+  border: 1px solid var(--color-button-dim);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.document-title-input:focus {
+  border-color: var(--color-button-light);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.document-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.document-item:hover .document-actions {
+  opacity: 1;
+}
+
+.document-action-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--color-button-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.document-action-button:hover {
+  background-color: var(--color-focus);
+  color: var(--color-black);
+}
+
+.document-action-button .material-symbols-outlined {
+  font-size: 18px;
 }
