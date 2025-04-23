@@ -69,5 +69,6 @@ export const usePdfHandler = () => {
     onDocumentLoadSuccess,
     handleTocClick,
     handleDocumentClick,
+    setPdfFile,
   };
 };

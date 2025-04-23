@@ -406,9 +406,27 @@ const PdfViewer = (
         <div className="pdf-controls-left">
           <button
             className="control-button"
-            onClick={() => setViewMode((prev) => (prev === "single" ? "grid" : "single"))}
+            onClick={() => {
+              const prevMode = viewMode;
+              const newMode = prevMode === "single" ? "grid" : "single";
+              setViewMode(newMode);
+              
+              // 모드 전환 후 현재 페이지 유지
+              setTimeout(() => {
+                if (newMode === "grid") {
+                  // 그리드 모드로 전환 시 현재 페이지로 즉시 이동 (애니메이션 없음)
+                  const pageElement = document.querySelector(`[data-page-number="${currentPage}"]`);
+                  if (pageElement) {
+                    pageElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+                  }
+                } else {
+                  // 단일 페이지 모드로 전환 시 현재 페이지로 이동
+                  goToPage(currentPage);
+                }
+              }, 100); // 페이지 렌더링을 위한 약간의 지연
+            }}
           >
-            <span className="material-symbols-outlined">{viewMode === "single" ? "grid_view" : "article"}</span>
+            <span className="material-symbols-outlined">{viewMode === "single" ? "article" : "grid_view"}</span>
           </button>
           <button className="control-button" onClick={toggleSearch}>
             <span className="material-symbols-outlined">search</span>

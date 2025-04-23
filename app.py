@@ -98,5 +98,62 @@ def upload_file():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route('/api/documents/<filename>', methods=['PUT'])
+def update_document(filename):
+    try:
+        data = request.json
+        if not data or 'title' not in data:
+            return jsonify({'error': 'Title is required'}), 400
+        
+        new_title = data['title']
+        if not new_title.strip():
+            return jsonify({'error': 'Title cannot be empty'}), 400
+        
+        documents = load_documents()
+        document_found = False
+        
+        for doc in documents:
+            if doc['filename'] == filename:
+                doc['title'] = new_title
+                document_found = True
+                break
+        
+        if not document_found:
+            return jsonify({'error': 'Document not found'}), 404
+        
+        save_documents(documents)
+        return jsonify({'message': 'Document updated successfully'}), 200
+    
+    except Exception as e:
+        print(f"Error updating document: {e}")
+        return jsonify({'error': 'Error updating document'}), 500
+
+@app.route('/api/documents/<filename>', methods=['DELETE'])
+def delete_document(filename):
+    try:
+        documents = load_documents()
+        document_found = False
+        updated_documents = []
+        
+        for doc in documents:
+            if doc['filename'] == filename:
+                document_found = True
+                # 파일 시스템에서 PDF 파일 삭제
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            else:
+                updated_documents.append(doc)
+        
+        if not document_found:
+            return jsonify({'error': 'Document not found'}), 404
+        
+        save_documents(updated_documents)
+        return jsonify({'message': 'Document deleted successfully'}), 200
+    
+    except Exception as e:
+        print(f"Error deleting document: {e}")
+        return jsonify({'error': 'Error deleting document'}), 500
+
 if __name__ == '__main__':
     app.run(port= 8000, debug=True) 
