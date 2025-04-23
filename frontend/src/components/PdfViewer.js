@@ -69,51 +69,23 @@ const PdfViewer = (
   };
 
   const clearHighlights = () => {
-    const textLayer = document.querySelector(".react-pdf__Page__textContent");
-    if (!textLayer) return;
-
-    try {
-      // Remove all highlights and restore original text
-      const allHighlights = textLayer.querySelectorAll(".highlight");
-      allHighlights.forEach((highlight) => {
-        if (highlight && highlight.parentNode) {
-          const parent = highlight.parentNode;
-          // If the highlight is inside a span, replace the span with its text content
-          if (parent.tagName === "SPAN") {
-            if (parent.parentNode) {
-              parent.parentNode.replaceChild(document.createTextNode(parent.textContent), parent);
-            }
-          } else {
-            // Otherwise replace the highlight with its text content
-            parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Error clearing highlights:", error);
-    }
-  };
-
-  const highlightText = (searchText, isSearch = false) => {
-    if (!searchText) return;
-    // First, completely reset all text layers to their original state
     const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
     allTextLayers.forEach(textLayer => {
       if (!textLayer) return;
       
       try {
-        // Remove all highlights and restore original text
+        // 모든 하이라이트를 제거하고 원본 텍스트로 복원합니다
         const allHighlights = textLayer.querySelectorAll('.highlight');
         allHighlights.forEach(highlight => {
           if (highlight && highlight.parentNode) {
             const parent = highlight.parentNode;
-            // If the highlight is inside a span, replace the span with its text content
+            // 하이라이트가 span 안에 있는 경우, span을 텍스트 내용으로 대체합니다
             if (parent.tagName === 'SPAN') {
               if (parent.parentNode) {
                 parent.parentNode.replaceChild(document.createTextNode(parent.textContent), parent);
               }
             } else {
-              // Otherwise replace the highlight with its text content
+              // 그렇지 않으면 하이라이트를 텍스트 내용으로 대체합니다
               parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
             }
           }
@@ -122,14 +94,46 @@ const PdfViewer = (
         console.error("Error clearing highlights:", error);
       }
     });
+  };
+
+  const highlightText = (searchText, isSearch = false) => {
+    if (!searchText) return;
+    
+    // 먼저 모든 하이라이트를 제거합니다
+    clearHighlights();
     
     const results = [];
     
-    // Process each text layer
+    // 모든 텍스트 레이어를 가져옵니다
+    const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
+    
+    // 각 텍스트 레이어를 처리합니다
     allTextLayers.forEach(textLayer => {
       if (!textLayer) return;
       
-      // Get all text nodes
+      // 페이지 요소를 찾습니다
+      let pageElement = null;
+      let currentElement = textLayer;
+      
+      // DOM을 위로 탐색하여 페이지 요소를 찾습니다
+      while (currentElement && !pageElement) {
+        if (currentElement.classList && currentElement.classList.contains('react-pdf__Page')) {
+          pageElement = currentElement;
+          break;
+        }
+        currentElement = currentElement.parentElement;
+      }
+      
+      // 페이지 번호를 가져옵니다
+      let pageNumber = 1; // 페이지를 찾을 수 없는 경우 기본값
+      if (pageElement) {
+        const pageNumberAttr = pageElement.getAttribute('data-page-number');
+        if (pageNumberAttr) {
+          pageNumber = parseInt(pageNumberAttr);
+        }
+      }
+      
+      // 텍스트 노드를 찾습니다
       const textNodes = [];
       const walker = document.createTreeWalker(
         textLayer,
@@ -145,7 +149,7 @@ const PdfViewer = (
         }
       }
       
-      // Process each text node
+      // 각 텍스트 노드를 처리합니다
       textNodes.forEach(node => {
         if (!node || !node.parentNode) return;
         
@@ -154,25 +158,26 @@ const PdfViewer = (
         const nodeLower = nodeText.toLowerCase();
         
         if (nodeLower.includes(searchLower)) {
-          // Create a new span element
-          const span = document.createElement('span');
-          
-          // Replace the text with highlighted version
+          // 텍스트를 하이라이트된 버전으로 대체합니다
           const escapedText = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           const regex = new RegExp(`(${escapedText})`, 'gi');
+          
+          // 원본 텍스트를 하이라이트된 텍스트로 대체합니다
+          const span = document.createElement('span');
           span.innerHTML = nodeText.replace(regex, '<span class="highlight' + (isSearch ? ' search' : '') + '">$1</span>');
           
-          // Replace the original node with our new span
+          // 원본 노드를 새 span으로 대체합니다
           try {
             node.parentNode.replaceChild(span, node);
             
+            // 검색 결과를 수집합니다
             if (isSearch) {
-              const highlights = span.querySelectorAll('.highlight.search');
+              const highlights = span.querySelectorAll('.highlight');
               highlights.forEach(highlight => {
                 results.push({
                   element: highlight,
                   text: highlight.textContent,
-                  pageNumber: parseInt(highlight.closest('.react-pdf__Page').getAttribute('data-page-number'))
+                  pageNumber: pageNumber
                 });
               });
             }
@@ -183,6 +188,7 @@ const PdfViewer = (
       });
     });
 
+    // 검색 결과를 설정합니다
     if (isSearch) {
       setSearchResults(results);
       if (results.length > 0) {
@@ -250,8 +256,10 @@ const PdfViewer = (
   };
 
   const handleSearchKeyPress = (e) => {
-    // No need to handle Enter key for search anymore
-    // But we can keep this function for other keyboard interactions if needed
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      goToNextSearchResult();
+    }
   };
 
   const toggleSearch = () => {
