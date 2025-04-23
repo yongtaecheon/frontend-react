@@ -22,13 +22,20 @@ const PdfViewer = (
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [currentSearchIndex, setCurrentSearchIndex] = useState(-1);
+  const [pageInputValue, setPageInputValue] = useState("1");
+  const [zoomInputValue, setZoomInputValue] = useState("100");
+  const [isPageInputVisible, setIsPageInputVisible] = useState(false);
+  const [isZoomInputVisible, setIsZoomInputVisible] = useState(false);
+  const [isZoomInputValid, setIsZoomInputValid] = useState(true);
 
   const zoomIn = () => {
     setScale((prev) => Math.min(prev + 0.1, 2.0));
+    setZoomInputValue(Math.round(Math.min(scale + 0.1, 2.0) * 100).toString());
   };
 
   const zoomOut = () => {
     setScale((prev) => Math.max(prev - 0.1, 0.5));
+    setZoomInputValue(Math.round(Math.max(scale - 0.1, 0.5) * 100).toString());
   };
 
   const goToPrevPage = () => {
@@ -89,84 +96,103 @@ const PdfViewer = (
 
   const highlightText = (searchText, isSearch = false) => {
     if (!searchText) return;
-
-    // First, completely reset the text layer to its original state
-    clearHighlights();
-
-    const textLayer = document.querySelector(".react-pdf__Page__textContent");
-    if (!textLayer) return;
-
-    // Get all text nodes
-    const textNodes = [];
-    const walker = document.createTreeWalker(textLayer, NodeFilter.SHOW_TEXT, null, false);
-
-    let node;
-    while ((node = walker.nextNode())) {
-      if (node && node.textContent) {
-        textNodes.push(node);
-      }
-    }
-
-    const results = [];
-
-    // Process each text node
-    textNodes.forEach((node) => {
-      if (!node || !node.parentNode) return;
-
-      const nodeText = node.textContent;
-      const searchLower = searchText.toLowerCase();
-      const nodeLower = nodeText.toLowerCase();
-
-      if (nodeLower.includes(searchLower)) {
-        // Create a new span element
-        const span = document.createElement("span");
-
-        // Replace the text with highlighted version
-        const escapedText = searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const regex = new RegExp(`(${escapedText})`, "gi");
-        span.innerHTML = nodeText.replace(
-          regex,
-          '<span class="highlight' + (isSearch ? " search" : "") + '">$1</span>'
-        );
-
-        // Replace the original node with our new span
-        try {
-          node.parentNode.replaceChild(span, node);
-
-          if (isSearch) {
-            const highlights = span.querySelectorAll(".highlight.search");
-            highlights.forEach((highlight) => {
-              results.push({
-                element: highlight,
-                text: highlight.textContent,
-              });
-            });
+    // First, completely reset all text layers to their original state
+    const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
+    allTextLayers.forEach(textLayer => {
+      if (!textLayer) return;
+      
+      try {
+        // Remove all highlights and restore original text
+        const allHighlights = textLayer.querySelectorAll('.highlight');
+        allHighlights.forEach(highlight => {
+          if (highlight && highlight.parentNode) {
+            const parent = highlight.parentNode;
+            // If the highlight is inside a span, replace the span with its text content
+            if (parent.tagName === 'SPAN') {
+              if (parent.parentNode) {
+                parent.parentNode.replaceChild(document.createTextNode(parent.textContent), parent);
+              }
+            } else {
+              // Otherwise replace the highlight with its text content
+              parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+            }
           }
-        } catch (error) {
-          console.error("Error replacing node:", error);
+        });
+      } catch (error) {
+        console.error("Error clearing highlights:", error);
+      }
+    });
+    
+    const results = [];
+    
+    // Process each text layer
+    allTextLayers.forEach(textLayer => {
+      if (!textLayer) return;
+      
+      // Get all text nodes
+      const textNodes = [];
+      const walker = document.createTreeWalker(
+        textLayer,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+      );
+      
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node && node.textContent) {
+          textNodes.push(node);
         }
       }
+      
+      // Process each text node
+      textNodes.forEach(node => {
+        if (!node || !node.parentNode) return;
+        
+        const nodeText = node.textContent;
+        const searchLower = searchText.toLowerCase();
+        const nodeLower = nodeText.toLowerCase();
+        
+        if (nodeLower.includes(searchLower)) {
+          // Create a new span element
+          const span = document.createElement('span');
+          
+          // Replace the text with highlighted version
+          const escapedText = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp(`(${escapedText})`, 'gi');
+          span.innerHTML = nodeText.replace(regex, '<span class="highlight' + (isSearch ? ' search' : '') + '">$1</span>');
+          
+          // Replace the original node with our new span
+          try {
+            node.parentNode.replaceChild(span, node);
+            
+            if (isSearch) {
+              const highlights = span.querySelectorAll('.highlight.search');
+              highlights.forEach(highlight => {
+                results.push({
+                  element: highlight,
+                  text: highlight.textContent,
+                  pageNumber: parseInt(highlight.closest('.react-pdf__Page').getAttribute('data-page-number'))
+                });
+              });
+            }
+          } catch (error) {
+            console.error("Error replacing node:", error);
+          }
+        }
+      });
     });
 
     if (isSearch) {
       setSearchResults(results);
       if (results.length > 0) {
         setCurrentSearchIndex(0);
-        try {
-          results[0].element.scrollIntoView({ behavior: "smooth", block: "center" });
-          results[0].element.classList.add("current");
-        } catch (error) {
-          console.error("Error scrolling to first result:", error);
-        }
+        results[0].element.classList.add('current');
       }
     } else {
-      const firstHighlight = textLayer.querySelector(".highlight");
+      const firstHighlight = document.querySelector('.highlight');
       if (firstHighlight) {
-        try {
-          firstHighlight.scrollIntoView({ behavior: "smooth", block: "center" });
-        } catch (error) {
-          console.error("Error scrolling to highlight:", error);
-        }
+        firstHighlight.classList.add('current');
       }
     }
   };
@@ -241,10 +267,33 @@ const PdfViewer = (
       // Clear search when closing
       setSearchQuery("");
       setSearchResults([]);
-      setCurrentSearchIndex(-1);
-
-      // Clear highlights
-      clearHighlights();
+      setCurrentSearchIndex(-1);      
+      // Clear all highlights
+      const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
+      allTextLayers.forEach(textLayer => {
+        if (!textLayer) return;
+        
+        try {
+          // Remove all highlights and restore original text
+          const allHighlights = textLayer.querySelectorAll('.highlight');
+          allHighlights.forEach(highlight => {
+            if (highlight && highlight.parentNode) {
+              const parent = highlight.parentNode;
+              // If the highlight is inside a span, replace the span with its text content
+              if (parent.tagName === 'SPAN') {
+                if (parent.parentNode) {
+                  parent.parentNode.replaceChild(document.createTextNode(parent.textContent), parent);
+                }
+              } else {
+                // Otherwise replace the highlight with its text content
+                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+              }
+            }
+          });
+        } catch (error) {
+          console.error("Error clearing highlights:", error);
+        }
+      });
     }
   };
 
@@ -282,14 +331,13 @@ const PdfViewer = (
         const textLayer = document.querySelector(".react-pdf__Page__textContent");
         if (textLayer && textLayer.children.length > 0) {
           clearInterval(checkTextLayer);
-          clearHighlights();
+          // Store current search index before re-running search
+          const prevIndex = currentSearchIndex;
           highlightText(searchQuery, true);
-
-          // If there are search results, scroll to the first one
-          if (searchResults.length > 0) {
-            setCurrentSearchIndex(0);
-            searchResults[0].element.scrollIntoView({ behavior: "smooth", block: "center" });
-            searchResults[0].element.classList.add("current");
+          // Restore the previous search index
+          if (prevIndex >= 0 && prevIndex < searchResults.length) {
+            setCurrentSearchIndex(prevIndex);
+            searchResults[prevIndex].element.classList.add('current');
           }
         }
       }, 100);
@@ -297,7 +345,7 @@ const PdfViewer = (
       // Cleanup interval after 5 seconds to prevent infinite checking
       setTimeout(() => clearInterval(checkTextLayer), 5000);
     }
-  }, [currentPage, isSearchOpen]);
+  }, [currentPage, isSearchOpen, searchQuery]);
 
   React.useImperativeHandle(ref, () => ({
     goToPage,
@@ -405,7 +453,41 @@ const PdfViewer = (
             <span className="material-symbols-outlined">chevron_left</span>
           </button>
           <div className="page-display">
-            {currentPage} / {numPages}
+            {isPageInputVisible ? (
+              <input
+                type="number"
+                value={pageInputValue}
+                onChange={(e) => {
+                  setPageInputValue(e.target.value);
+                }}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    const value = parseInt(e.target.value);
+                    if (value >= 1 && value <= numPages) {
+                      goToPage(value);
+                      setPageInputValue(value.toString());
+                      setIsPageInputVisible(false);
+                    }
+                  }
+                }}
+                onBlur={() => {
+                  setPageInputValue(currentPage.toString());
+                  setIsPageInputVisible(false);
+                }}
+                min="1"
+                max={numPages}
+                className="page-input"
+                autoFocus
+              />
+            ) : (
+              <span 
+                className="page-number-display"
+                onClick={() => setIsPageInputVisible(true)}
+              >
+                {currentPage}
+              </span>
+            )}
+            <span> / {numPages}</span>
           </div>
           <button className="page-nav-button" onClick={goToNextPage} disabled={currentPage >= numPages}>
             <span className="material-symbols-outlined">chevron_right</span>
@@ -415,7 +497,52 @@ const PdfViewer = (
           <button className="control-button" onClick={zoomOut}>
             <span className="material-symbols-outlined">remove</span>
           </button>
-          <span className="zoom-text">{Math.round(scale * 100)}%</span>
+          {isZoomInputVisible ? (
+            <input
+              type="number"
+              value={zoomInputValue}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                setZoomInputValue(e.target.value);
+                setIsZoomInputValid(value >= 50 && value <= 200);
+              }}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  const value = parseInt(e.target.value);
+                  if (value >= 50 && value <= 200) {
+                    setScale(value / 100);
+                    setZoomInputValue(value.toString());
+                    setIsZoomInputVisible(false);
+                    setIsZoomInputValid(true);
+                  }
+                }
+              }}
+              onBlur={() => {
+                const value = parseInt(zoomInputValue);
+                if (value >= 50 && value <= 200) {
+                  setScale(value / 100);
+                  setZoomInputValue(value.toString());
+                  setIsZoomInputValid(true);
+                } else {
+                  setZoomInputValue(Math.round(scale * 100).toString());
+                  setIsZoomInputValid(true);
+                }
+                setIsZoomInputVisible(false);
+              }}
+              min="50"
+              max="200"
+              className={`zoom-input ${!isZoomInputValid ? 'invalid' : ''}`}
+              autoFocus
+            />
+          ) : (
+            <span 
+              className="zoom-display"
+              onClick={() => setIsZoomInputVisible(true)}
+            >
+              {Math.round(scale * 100)}
+            </span>
+          )}
+          <span>%</span>
           <button className="control-button" onClick={zoomIn}>
             <span className="material-symbols-outlined">add</span>
           </button>
@@ -423,9 +550,9 @@ const PdfViewer = (
       </div>
       <div className="pdf-viewer">
         {isLoading && <LoadingSpinner />}
-        <div style={{ display: isLoading ? "none" : "block" }}>
-          <Document
-            file={pdfFile}
+        <div style={{ display: isLoading ? 'none' : 'block' }}>
+        <Document
+          file={pdfFile}
             onLoadSuccess={({ numPages }) => {
               onDocumentLoadSuccess({ numPages });
               setIsDocumentLoaded(true);
@@ -448,18 +575,18 @@ const PdfViewer = (
               />
             ) : (
               Array.from(new Array(numPages), (el, index) => (
-                <Page
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  scale={scale}
+            <Page
+              key={`page_${index + 1}`}
+              pageNumber={index + 1}
+              scale={scale}
                   className="pdf-page"
                   renderTextLayer={true}
-                  renderAnnotationLayer={true}
+              renderAnnotationLayer={true}
                   loading={null}
-                />
+            />
               ))
             )}
-          </Document>
+        </Document>
         </div>
       </div>
     </div>
