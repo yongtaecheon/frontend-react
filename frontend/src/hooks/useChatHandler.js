@@ -235,6 +235,11 @@ export const useChatHandler = (toc, handlePageNavigation) => {
   };
 
   const handleOptionClick = (option) => {
+    if (option.type === 'addMessages') {
+      setChatHistory((prev) => [...prev, ...option.messages]);
+      return;
+    }
+
     if (option.text === "reset") {
       resetChat();
       return;

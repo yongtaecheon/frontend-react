@@ -17,7 +17,30 @@ const ChatPanel = forwardRef(({
   const keywordButtonsRef = useRef(null);
 
   const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
+    const value = e.target.value;
+    setSearchQuery(value);
+
+    if (e.key === 'Enter' && value.trim()) {
+      // Add search query as user message
+      const userMessage = {
+        type: 'user',
+        content: `검색: ${value}`,
+        options: []
+      };
+
+      // Add search results as bot message
+      const botMessage = {
+        type: 'bot',
+        content: '검색 결과:',
+        options: filteredKeywords
+      };
+
+      // Update chat history
+      onOptionClick({ type: 'addMessages', messages: [userMessage, botMessage] });
+
+      // Clear search input
+      setSearchQuery("");
+    }
   };
 
   const filteredKeywords = toc
@@ -223,7 +246,8 @@ const ChatPanel = forwardRef(({
               type="text"
               placeholder="목차를 검색해보세요!"
               value={searchQuery}
-              onChange={handleSearch}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearch}
               className="search-input"
             />
           </div>
