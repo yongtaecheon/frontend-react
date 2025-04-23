@@ -137,7 +137,7 @@ function App() {
         {pdfLoading && !pdfFile && <LoadingSpinner className="overlay" />}
       </div>
       <div className="right-panel">
-        <ChatPanel chatHistory={chatHistory} onOptionClick={handleOptionClick} ref={chatContainerRef} />
+        <ChatPanel chatHistory={chatHistory} onOptionClick={handleOptionClick} ref={chatContainerRef} toc={toc} />
       </div>
     </div>
   );

@@ -7,11 +7,14 @@ import "../styles/components/PDFViewer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadSuccess, onLoadError, highlightKeyword }, ref) => {
+const PdfViewer = (
+  { pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadSuccess, onLoadError, highlightKeyword },
+  ref
+) => {
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState('single'); // 'single' or 'grid'
+  const [viewMode, setViewMode] = useState("single"); // 'single' or 'grid'
   const [isLoading, setIsLoading] = useState(true);
   const [isDocumentLoaded, setIsDocumentLoaded] = useState(false);
   const [textItems, setTextItems] = useState([]);
@@ -61,22 +64,22 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
   const scrollToPage = (pageNumber) => {
     const pageElement = document.querySelector(`[data-page-number="${pageNumber}"]`);
     if (pageElement) {
-      pageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      pageElement.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
   const clearHighlights = () => {
-    const textLayer = document.querySelector('.react-pdf__Page__textContent');
+    const textLayer = document.querySelector(".react-pdf__Page__textContent");
     if (!textLayer) return;
-    
+
     try {
       // Remove all highlights and restore original text
-      const allHighlights = textLayer.querySelectorAll('.highlight');
-      allHighlights.forEach(highlight => {
+      const allHighlights = textLayer.querySelectorAll(".highlight");
+      allHighlights.forEach((highlight) => {
         if (highlight && highlight.parentNode) {
           const parent = highlight.parentNode;
           // If the highlight is inside a span, replace the span with its text content
-          if (parent.tagName === 'SPAN') {
+          if (parent.tagName === "SPAN") {
             if (parent.parentNode) {
               parent.parentNode.replaceChild(document.createTextNode(parent.textContent), parent);
             }
@@ -93,7 +96,6 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
 
   const highlightText = (searchText, isSearch = false) => {
     if (!searchText) return;
-    
     // First, completely reset all text layers to their original state
     const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
     allTextLayers.forEach(textLayer => {
@@ -180,7 +182,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
         }
       });
     });
-    
+
     if (isSearch) {
       setSearchResults(results);
       if (results.length > 0) {
@@ -194,13 +196,13 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       }
     }
   };
-  
+
   const goToNextSearchResult = () => {
     if (searchResults.length === 0) return;
 
     // Remove current highlight
     if (currentSearchIndex >= 0) {
-      searchResults[currentSearchIndex].element.classList.remove('current');
+      searchResults[currentSearchIndex].element.classList.remove("current");
     }
 
     // Move to next result
@@ -208,8 +210,8 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
     setCurrentSearchIndex(nextIndex);
 
     // Add highlight to new current result and scroll to it
-    searchResults[nextIndex].element.classList.add('current');
-    searchResults[nextIndex].element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    searchResults[nextIndex].element.classList.add("current");
+    searchResults[nextIndex].element.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const goToPrevSearchResult = () => {
@@ -217,7 +219,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
 
     // Remove current highlight
     if (currentSearchIndex >= 0) {
-      searchResults[currentSearchIndex].element.classList.remove('current');
+      searchResults[currentSearchIndex].element.classList.remove("current");
     }
 
     // Move to previous result
@@ -225,14 +227,14 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
     setCurrentSearchIndex(prevIndex);
 
     // Add highlight to new current result and scroll to it
-    searchResults[prevIndex].element.classList.add('current');
-    searchResults[prevIndex].element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    searchResults[prevIndex].element.classList.add("current");
+    searchResults[prevIndex].element.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchQuery(value);
-    
+
     // Clear highlights if search is empty
     if (!value.trim()) {
       clearHighlights();
@@ -241,7 +243,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
     } else {
       // Reset the text layer before searching
       clearHighlights();
-      
+
       // Now perform the search
       highlightText(value, true);
     }
@@ -253,7 +255,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
   };
 
   const toggleSearch = () => {
-    setIsSearchOpen(prev => !prev);
+    setIsSearchOpen((prev) => !prev);
     if (!isSearchOpen) {
       // Focus the search input when opening
       setTimeout(() => {
@@ -265,8 +267,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       // Clear search when closing
       setSearchQuery("");
       setSearchResults([]);
-      setCurrentSearchIndex(-1);
-      
+      setCurrentSearchIndex(-1);      
       // Clear all highlights
       const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
       allTextLayers.forEach(textLayer => {
@@ -305,11 +306,11 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
   // Handle Ctrl+F
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+      if ((e.ctrlKey || e.metaKey) && e.key === "f") {
         e.preventDefault();
         e.stopPropagation();
         toggleSearch();
-      } else if (e.key === 'Escape' && isSearchOpen) {
+      } else if (e.key === "Escape" && isSearchOpen) {
         setIsSearchOpen(false);
         setSearchQuery("");
         setSearchResults([]);
@@ -318,8 +319,8 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown, true);
-    return () => document.removeEventListener('keydown', handleKeyDown, true);
+    document.addEventListener("keydown", handleKeyDown, true);
+    return () => document.removeEventListener("keydown", handleKeyDown, true);
   }, [isSearchOpen]);
 
   // Re-run search when page changes
@@ -327,7 +328,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
     if (isSearchOpen && searchQuery.trim()) {
       // Wait for the page to render and text layer to be ready
       const checkTextLayer = setInterval(() => {
-        const textLayer = document.querySelector('.react-pdf__Page__textContent');
+        const textLayer = document.querySelector(".react-pdf__Page__textContent");
         if (textLayer && textLayer.children.length > 0) {
           clearInterval(checkTextLayer);
           // Store current search index before re-running search
@@ -351,13 +352,13 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
     goToPrevPage,
     goToNextPage,
     currentPage,
-    numPages
+    numPages,
   }));
 
   useEffect(() => {
     const handleScroll = () => {
-      if (viewMode === 'grid') {
-        const pages = document.querySelectorAll('.react-pdf__Page');
+      if (viewMode === "grid") {
+        const pages = document.querySelectorAll(".react-pdf__Page");
         const containerTop = containerRef.current?.getBoundingClientRect().top;
 
         let closestPage = 1;
@@ -368,7 +369,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
           const distance = Math.abs(pageTop);
           if (distance < minDistance) {
             minDistance = distance;
-            closestPage = parseInt(page.getAttribute('data-page-number'));
+            closestPage = parseInt(page.getAttribute("data-page-number"));
           }
         });
 
@@ -376,10 +377,10 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       }
     };
 
-    const container = containerRef.current?.querySelector('.pdf-viewer');
+    const container = containerRef.current?.querySelector(".pdf-viewer");
     if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => container.removeEventListener('scroll', handleScroll);
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
     }
   }, [viewMode]);
 
@@ -403,10 +404,11 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
     <div className="pdf-container" ref={containerRef}>
       <div className="pdf-controls">
         <div className="pdf-controls-left">
-          <button className="control-button" onClick={() => setViewMode(prev => prev === 'single' ? 'grid' : 'single')}>
-            <span className="material-symbols-outlined">
-              {viewMode === 'single' ? 'grid_view' : 'article'}
-            </span>
+          <button
+            className="control-button"
+            onClick={() => setViewMode((prev) => (prev === "single" ? "grid" : "single"))}
+          >
+            <span className="material-symbols-outlined">{viewMode === "single" ? "grid_view" : "article"}</span>
           </button>
           <button className="control-button" onClick={toggleSearch}>
             <span className="material-symbols-outlined">search</span>
@@ -423,10 +425,18 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
                 className="search-input"
               />
               <div className="search-controls">
-                <button onClick={goToPrevSearchResult} className="search-nav-button" disabled={searchResults.length === 0}>
+                <button
+                  onClick={goToPrevSearchResult}
+                  className="search-nav-button"
+                  disabled={searchResults.length === 0}
+                >
                   <span className="material-symbols-outlined">arrow_upward</span>
                 </button>
-                <button onClick={goToNextSearchResult} className="search-nav-button" disabled={searchResults.length === 0}>
+                <button
+                  onClick={goToNextSearchResult}
+                  className="search-nav-button"
+                  disabled={searchResults.length === 0}
+                >
                   <span className="material-symbols-outlined">arrow_downward</span>
                 </button>
                 {searchResults.length > 0 && (
@@ -553,7 +563,7 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
             }}
             loading={null}
           >
-            {viewMode === 'single' ? (
+            {viewMode === "single" ? (
               <Page
                 key={`page_${currentPage}`}
                 pageNumber={currentPage}

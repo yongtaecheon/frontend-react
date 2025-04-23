@@ -93,11 +93,35 @@ body {
   z-index: 10;
 }
 
+.material-symbols-outlined {
+  margin-bottom: 0px;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(0px) scale(0.2);
+  }
+
+  100% {
+    transform: translateX(0px) scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(0px) scale(0.2);
+  }
+
+  100% {
+    transform: translateX(0px) scale(1);
   }
 }

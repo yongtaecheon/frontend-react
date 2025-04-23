@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "../styles/components/LeftPanel.css";
 
 const LeftPanel = ({
@@ -28,9 +28,7 @@ const LeftPanel = ({
           File Upload
         </button>
         <input id="file-input" type="file" accept=".pdf" onChange={onFileChange} style={{ display: "none" }} />
-        <div className="background-layer">
-          <img src="/poby_list_bg.png" alt="" className="background-image" />
-        </div>
+        <img src="/poby_leftpanel.png" alt="" className="panel-image" />
         <div className="documents-list">
           <h3>업로드 한 문서</h3>
           {documents.map((doc, index) => (

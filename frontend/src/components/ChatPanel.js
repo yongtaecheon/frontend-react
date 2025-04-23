@@ -1,12 +1,19 @@
-import React, { forwardRef, useEffect } from "react";
-import { useState } from "react";
+import React, { forwardRef, useState } from "react";
 
-const ChatPanel = forwardRef(({ chatHistory, onOptionClick }, ref) => {
-  const [isDim, setIsDim] = useState(false);
+const ChatPanel = forwardRef(({ chatHistory, onOptionClick, toc }, ref) => {
+  const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    setIsDim(!isDim);
-  }, [chatHistory]);
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredKeywords = toc
+    .filter((item) => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    .map((item) => ({
+      text: item.title,
+      page: item.page,
+      level: item.level,
+    }));
 
   const chatContainer = [];
   chatHistory.map((message, index) => {
@@ -18,11 +25,7 @@ const ChatPanel = forwardRef(({ chatHistory, onOptionClick }, ref) => {
         {message.options && message.options.length > 0 && (
           <div className="message-options">
             {message.options.map((option, optIndex) => (
-              <button
-                key={optIndex}
-                className={`option-button ${index % 2 === 0 ? "dim" : "light"}`}
-                onClick={() => onOptionClick(option)}
-              >
+              <button key={optIndex} className="option-button" onClick={() => onOptionClick(option)}>
                 {option.text}
               </button>
             ))}
@@ -30,12 +33,43 @@ const ChatPanel = forwardRef(({ chatHistory, onOptionClick }, ref) => {
         )}
       </div>
     );
-    console.log(index % 2);
   });
 
   return (
-    <div className="chat-container" ref={ref}>
-      {chatContainer}
+    <div className="chat-container">
+      <div className="chat-messages" ref={ref}>
+        {chatContainer}
+      </div>
+      <div className="chat-search-bottom">
+        <div className="search-header">
+          <div className="search-input-container">
+            <input
+              type="text"
+              placeholder="목차를 검색해보세요!"
+              value={searchQuery}
+              onChange={handleSearch}
+              className="search-input"
+            />
+            <span className="material-symbols-outlined send-icon">chevron_right</span>
+          </div>
+        </div>
+        {searchQuery && (
+          <div className="keyword-buttons">
+            {filteredKeywords.map((keyword, index) => (
+              <button
+                key={index}
+                className="option-button"
+                onClick={() => {
+                  onOptionClick(keyword);
+                  setSearchQuery("");
+                }}
+              >
+                {keyword.text}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 });
