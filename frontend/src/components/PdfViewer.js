@@ -19,13 +19,20 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [currentSearchIndex, setCurrentSearchIndex] = useState(-1);
+  const [pageInputValue, setPageInputValue] = useState("1");
+  const [zoomInputValue, setZoomInputValue] = useState("100");
+  const [isPageInputVisible, setIsPageInputVisible] = useState(false);
+  const [isZoomInputVisible, setIsZoomInputVisible] = useState(false);
+  const [isZoomInputValid, setIsZoomInputValid] = useState(true);
 
   const zoomIn = () => {
     setScale((prev) => Math.min(prev + 0.1, 2.0));
+    setZoomInputValue(Math.round(Math.min(scale + 0.1, 2.0) * 100).toString());
   };
 
   const zoomOut = () => {
     setScale((prev) => Math.max(prev - 0.1, 0.5));
+    setZoomInputValue(Math.round(Math.max(scale - 0.1, 0.5) * 100).toString());
   };
 
   const goToPrevPage = () => {
@@ -436,7 +443,41 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
             <span className="material-symbols-outlined">chevron_left</span>
           </button>
           <div className="page-display">
-            {currentPage} / {numPages}
+            {isPageInputVisible ? (
+              <input
+                type="number"
+                value={pageInputValue}
+                onChange={(e) => {
+                  setPageInputValue(e.target.value);
+                }}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    const value = parseInt(e.target.value);
+                    if (value >= 1 && value <= numPages) {
+                      goToPage(value);
+                      setPageInputValue(value.toString());
+                      setIsPageInputVisible(false);
+                    }
+                  }
+                }}
+                onBlur={() => {
+                  setPageInputValue(currentPage.toString());
+                  setIsPageInputVisible(false);
+                }}
+                min="1"
+                max={numPages}
+                className="page-input"
+                autoFocus
+              />
+            ) : (
+              <span 
+                className="page-number-display"
+                onClick={() => setIsPageInputVisible(true)}
+              >
+                {currentPage}
+              </span>
+            )}
+            <span> / {numPages}</span>
           </div>
           <button className="page-nav-button" onClick={goToNextPage} disabled={currentPage >= numPages}>
             <span className="material-symbols-outlined">chevron_right</span>
@@ -446,7 +487,52 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
           <button className="control-button" onClick={zoomOut}>
             <span className="material-symbols-outlined">remove</span>
           </button>
-          <span className="zoom-text">{Math.round(scale * 100)}%</span>
+          {isZoomInputVisible ? (
+            <input
+              type="number"
+              value={zoomInputValue}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                setZoomInputValue(e.target.value);
+                setIsZoomInputValid(value >= 50 && value <= 200);
+              }}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  const value = parseInt(e.target.value);
+                  if (value >= 50 && value <= 200) {
+                    setScale(value / 100);
+                    setZoomInputValue(value.toString());
+                    setIsZoomInputVisible(false);
+                    setIsZoomInputValid(true);
+                  }
+                }
+              }}
+              onBlur={() => {
+                const value = parseInt(zoomInputValue);
+                if (value >= 50 && value <= 200) {
+                  setScale(value / 100);
+                  setZoomInputValue(value.toString());
+                  setIsZoomInputValid(true);
+                } else {
+                  setZoomInputValue(Math.round(scale * 100).toString());
+                  setIsZoomInputValid(true);
+                }
+                setIsZoomInputVisible(false);
+              }}
+              min="50"
+              max="200"
+              className={`zoom-input ${!isZoomInputValid ? 'invalid' : ''}`}
+              autoFocus
+            />
+          ) : (
+            <span 
+              className="zoom-display"
+              onClick={() => setIsZoomInputVisible(true)}
+            >
+              {Math.round(scale * 100)}
+            </span>
+          )}
+          <span>%</span>
           <button className="control-button" onClick={zoomIn}>
             <span className="material-symbols-outlined">add</span>
           </button>

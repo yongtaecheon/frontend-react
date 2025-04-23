@@ -14,7 +14,6 @@
   justify-content: space-between;
   align-items: center;
   padding: 4px 12px;
-  /* background-color: #f4f2ef; */
   background-color: var(--color-bg-light);
   border-radius: 10px;
   position: absolute;
@@ -23,6 +22,9 @@
   margin: 20px;
   border: 1px solid var(--color-border);
   box-shadow: 0 0px 4px var(--color-border);
+  height: 40px;
+  width: 80%;
+  box-sizing: border-box;
 }
 
 .pdf-controls-left,
@@ -326,4 +328,55 @@ textLayer .highlight.search {
   font-size: 12px;
   color: #666;
   margin-left: 8px;
+}
+
+.page-input,
+.zoom-input {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin: 0 4px;
+  font-size: 14px;
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.page-input:focus,
+.zoom-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Chrome, Safari, Edge, Opera */
+.page-input::-webkit-inner-spin-button,
+.page-input::-webkit-outer-spin-button,
+.zoom-input::-webkit-inner-spin-button,
+.zoom-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.page-number-display,
+.zoom-display {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 30px;
+  text-align: center;
+  display: inline-block;
+}
+
+.page-number-display:hover,
+.zoom-display:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.zoom-input.invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
 }
