@@ -156,12 +156,35 @@
   transition: background-color 0.2s ease, border-left-color 0.2s ease;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
   position: relative;
+  max-width: 100%;
 }
 
 .document-item:hover {
   background-color: var(--color-focus);
   transition: background-color 0.5s ease;
+}
+
+.document-item:hover::after {
+  content: attr(data-filename);
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background-color: white;
+  color: black;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  border: 1px solid #ddd;
+  display: block;
+  min-width: 200px;
+  max-width: 300px;
+  word-break: break-all;
 }
 
 .document-item.active {

@@ -36,6 +36,7 @@ const LeftPanel = ({
               key={index}
               className={`document-item ${isCurrentDocument(doc) ? "active" : ""}`}
               onClick={() => onDocumentClick(doc)}
+              title={doc.filename}
             >
               {doc.filename}
             </div>
