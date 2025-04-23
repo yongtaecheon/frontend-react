@@ -19,7 +19,6 @@
   border-radius: 10px;
   position: absolute;
   z-index: 2;
-  gap: 4vw;
   margin: 20px;
   border: 1px solid var(--color-border);
   box-shadow: 0 0px 2px var(--color-border);
@@ -249,13 +248,13 @@
 /* 미디어 쿼리 추가 */
 @media screen and (max-width: 768px) {
   .pdf-controls {
-    gap: 2vw;
+    gap: 6vw;
   }
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1360px) {
   .pdf-controls {
-    gap: 6vw;
+    gap: 10vw;
   }
 }
 

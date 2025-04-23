@@ -3,8 +3,6 @@
   flex-direction: column;
   height: 100%;
   background-color: var(--color-bg-light);
-  border-radius: 10px;
-  border: 1px solid var(--color-border);
   overflow: hidden;
 }
 
@@ -14,12 +12,16 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
+  margin: 20px;
   padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background-color: var(--color-light-gray);
 }
 
 .chat-search-bottom {
   padding: 1rem;
-  background-color: var(--color-white);
+  background-color: var(--color-bg-light);
   border-top: 1px solid var(--color-border);
   margin-top: auto;
 }
@@ -35,7 +37,7 @@
 
 .chat-message.bot {
   align-self: flex-start;
-  background-color: var(--color-light-gray);
+  background-color: var(--color-white);
   animation: slideInLeft 0.6s ease forwards;
 }
 
@@ -179,7 +181,6 @@
   border-radius: 10px;
   font-size: 0.9rem;
   color: var(--color-text);
-  background-color: var(--color-white);
   transition: all 0.2s ease;
 }
 
@@ -202,8 +203,9 @@
   gap: 0.5rem;
   margin-top: 1rem;
   padding: 0.5rem;
-  background-color: var(--color-bg-light);
-  border-radius: 8px;
+  background-color: var(--color-light-gray);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
   max-height: 200px;
   overflow-y: auto;
 }
@@ -212,7 +214,7 @@
   padding: 0.5rem 1rem;
   background-color: var(--color-white);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--color-text);
   font-size: 0.9rem;
   cursor: pointer;

@@ -58,7 +58,7 @@ const ChatPanel = forwardRef(({ chatHistory, onOptionClick, toc }, ref) => {
             {filteredKeywords.map((keyword, index) => (
               <button
                 key={index}
-                className="keyword-button"
+                className="option-button"
                 onClick={() => {
                   onOptionClick(keyword);
                   setSearchQuery("");
