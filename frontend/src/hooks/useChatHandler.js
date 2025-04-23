@@ -26,7 +26,7 @@ export const useChatHandler = (toc, handlePageNavigation) => {
     }
 
     // Find all level 2 items (first actual TOC items)
-    const topLevelItems = toc.filter(item => item.level === 2);
+    const topLevelItems = toc.filter((item) => item.level === 2);
 
     if (topLevelItems.length > 0) {
       setChatHistory([
@@ -34,7 +34,9 @@ export const useChatHandler = (toc, handlePageNavigation) => {
           type: "bot",
           content: (
             <div>
-                <span>목차 키워드를 선택하세요  <span className="material-symbols-outlined">pets</span></span>
+              <span>
+                목차 키워드를 선택하세요 <span className="material-symbols-outlined">pets</span>
+              </span>
             </div>
           ),
           options: topLevelItems.map((item) => ({
@@ -52,7 +54,9 @@ export const useChatHandler = (toc, handlePageNavigation) => {
           type: "bot",
           content: (
             <div>
-                <span>목차 키워드를 선택하세요  <span className="material-symbols-outlined">pets</span></span>
+              <span>
+                목차 키워드를 선택하세요 <span className="material-symbols-outlined">pets</span>
+              </span>
             </div>
           ),
           options: nonTitleItems.map((item) => ({
@@ -66,11 +70,15 @@ export const useChatHandler = (toc, handlePageNavigation) => {
   };
 
   const handleOptionClick = (option) => {
-    if (option.text === "처음으로") {
+    if (option.text === "reset") {
       resetChat();
       return;
     }
-
+    if (option.isLast === true) {
+      // 마지막일 경우 페이지 히스토리 추가 안하고 페이지 이동만 수행함
+      handlePageNavigation(option.page, option.text);
+      return;
+    }
     // Add user's selection to chat history
     setChatHistory((prev) => [...prev, { type: "user", content: option.text }]);
 
@@ -122,7 +130,8 @@ export const useChatHandler = (toc, handlePageNavigation) => {
         {
           type: "bot",
           content: `${option.text}(으)로 이동했습니다.`,
-          options: [{ text: "처음으로", page: 1, level: 0 }], // Special level for '처음으로'
+          options: [{ ...option, isLast: true }],
+          //options: [{ text: "처음으로", page: 1, level: 0 }], // Special level for '처음으로'
         },
       ]);
     }
