@@ -154,6 +154,9 @@
   color: var(--color-black);
   font-size: 0.9rem;
   transition: background-color 0.2s ease, border-left-color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
 }
 
 .document-item:hover {
