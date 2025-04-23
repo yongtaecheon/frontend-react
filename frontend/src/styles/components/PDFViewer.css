@@ -110,8 +110,7 @@
   font-size: 13px;
   color: #333;
   font-weight: 500;
-  min-width: 90px;
-
+  min-width: 60px;
   text-align: center;
 }
 
@@ -186,13 +185,13 @@
   z-index: 1;
   opacity: 0.2;
   mix-blend-mode: multiply;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .react-pdf__Page__textContent span {
   color: transparent;
-  pointer-events: none;
-  user-select: none;
+  pointer-events: auto;
+  user-select: text;
 }
 
 .highlight {
@@ -267,7 +266,7 @@
   -webkit-transform-origin: 0% 0%;
   transform-origin: 0% 0%;
   z-index: 1;
-  pointer-events: none;
+  pointer-events: auto;
   mix-blend-mode: multiply;
 }
 
@@ -277,8 +276,8 @@
   white-space: pre;
   cursor: text;
   transform-origin: 0% 0%;
-  pointer-events: none;
-  user-select: none;
+  pointer-events: auto;
+  user-select: text;
 }
 
 .textLayer .highlight {
@@ -305,7 +304,7 @@
 }
 
 /* 미디어 쿼리 추가 */
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 768px) {
   .pdf-controls {
     gap: 6vw;
   }
@@ -313,7 +312,7 @@
 
 @media screen and (min-width: 1360px) {
   .pdf-controls {
-    gap: 8vw;
+    gap: 10vw;
   }
 }
 
