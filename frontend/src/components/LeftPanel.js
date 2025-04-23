@@ -101,7 +101,6 @@ const LeftPanel = ({
               onClick={() => onDocumentClick(doc)}
               title={doc.filename}
             >
-              {doc.filename}
               {editingDocId === doc.filename ? (
                 <input
                   ref={editInputRef}
