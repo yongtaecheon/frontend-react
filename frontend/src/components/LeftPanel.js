@@ -37,7 +37,7 @@ const LeftPanel = ({
               className={`document-item ${isCurrentDocument(doc) ? "active" : ""}`}
               onClick={() => onDocumentClick(doc)}
             >
-              {doc.title}
+              {doc.filename}
             </div>
           ))}
         </div>

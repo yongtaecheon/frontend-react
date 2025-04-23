@@ -36,19 +36,19 @@ def get_documents():
 def upload_file():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
-    
+
     file = request.files['file']
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
-    
+
     if file and file.filename.endswith('.pdf'):
-        filename = secure_filename(file.filename)
+        filename = file.filename  # Remove secure_filename to preserve original filename
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-        # --- Check for duplicates BEFORE saving the file --- 
+        # --- Check for duplicates BEFORE saving the file ---
         #     (Optional: Save disk space by not re-saving the file if it exists,
         #      but for simplicity, we'll re-save for now and just prevent DB duplication)
-        file.save(filepath) 
+        file.save(filepath)
 
         # Extract TOC from PDF
         try:
@@ -70,7 +70,7 @@ def upload_file():
                 'page': page
             })
 
-        # --- Check for duplicates BEFORE saving document metadata --- 
+        # --- Check for duplicates BEFORE saving document metadata ---
         documents = load_documents()
         is_duplicate = any(doc['filename'] == filename for doc in documents)
 
@@ -99,4 +99,4 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
-    app.run(port= 8000, debug=True) 
+    app.run(port= 8000, debug=True)
