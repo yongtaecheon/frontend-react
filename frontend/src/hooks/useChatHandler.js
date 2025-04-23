@@ -2,92 +2,51 @@ import { useState, useRef, useEffect } from "react";
 
 // For Testing
 const MOCK_RESPONSIBLE_PERSONS = {
-  "Foreword": {
-    name: "김서문",
-    team: "편집팀",
-    role: "편집 책임자",
-    phoneNumber: "010-1234-5678",
-    email: "kim.editor@kbs.co.kr"
-  },
-  "TOTAL CONTENTS": {
-    name: "이목차",
-    team: "편집팀",
-    role: "목차 관리자",
-    phoneNumber: "010-2345-6789",
-    email: "lee.toc@kbs.co.kr"
-  },
-  "1. Purpose": {
-    name: "박서비스",
+  "서비스 표준": {
+    name: "김서비스",
     team: "서비스 표준팀",
     role: "서비스 표준 전문가",
-    phoneNumber: "010-3456-7890",
-    email: "park.service@kbs.co.kr"
+    phoneNumber: "010-1234-5678",
+    email: "kim.service@kbs.co.kr"
   },
-  "DATA STRUCTURE AND DEFINITION OF BASICINFORMATION OF SERVICE INFORMATION": {
-    name: "최데이터",
+  "데이터 구조": {
+    name: "이데이터",
     team: "데이터 구조팀",
     role: "데이터 구조 전문가",
-    phoneNumber: "010-4567-8901",
-    email: "choi.data@kbs.co.kr"
+    phoneNumber: "010-2345-6789",
+    email: "lee.data@kbs.co.kr"
   },
-  "DATA STRUCTURE AND DEFINITION OFEXTENSION INFORMATION OFSERVICE INFORMATION": {
-    name: "정확장",
-    team: "데이터 구조팀",
-    role: "확장 정보 전문가",
-    phoneNumber: "010-5678-9012",
-    email: "jung.extension@kbs.co.kr"
-  },
-  "GUIDELINE FOR THE OPERATION METHOD OF SI (SERVICE INFORMATION)": {
-    name: "강가이드",
+  "서비스 정보": {
+    name: "박정보",
     team: "서비스 정보팀",
-    role: "SI 운영 가이드라인 담당자",
-    phoneNumber: "010-6789-0123",
-    email: "kang.guide@kbs.co.kr"
+    role: "서비스 정보 전문가",
+    phoneNumber: "010-3456-7890",
+    email: "park.info@kbs.co.kr"
   }
 };
 
 // Jira 이슈 목데이터
 const MOCK_JIRA_ISSUES = {
-  "Foreword": [
+  "서비스 표준": [
     {
-      title: "서문 검토 필요",
+      title: "서비스 표준 문서 업데이트 필요",
       url: "https://jira.example.com/browse/PROJ-123"
-    }
-  ],
-  "TOTAL CONTENTS": [
+    },
     {
-      title: "목차 구조 개선",
+      title: "서비스 표준 검토 요청",
       url: "https://jira.example.com/browse/PROJ-124"
     }
   ],
-  "1. Purpose": [
+  "데이터 구조": [
     {
-      title: "목적 섹션 업데이트",
+      title: "데이터 구조 개선 작업",
       url: "https://jira.example.com/browse/PROJ-125"
     }
   ],
-  "2. Scope": [
+  "서비스 정보": [
     {
-      title: "범위 정의 검토",
+      title: "서비스 정보 업데이트",
       url: "https://jira.example.com/browse/PROJ-126"
-    }
-  ],
-  "3. References": [
-    {
-      title: "참조 문서 추가",
-      url: "https://jira.example.com/browse/PROJ-127"
-    }
-  ],
-  "4. Terms and definitions": [
-    {
-      title: "용어 정의 업데이트",
-      url: "https://jira.example.com/browse/PROJ-128"
-    }
-  ],
-  "5. Conventions": [
-    {
-      title: "규칙 검토",
-      url: "https://jira.example.com/browse/PROJ-129"
     }
   ]
 };
@@ -113,12 +72,12 @@ export const useChatHandler = (toc, handlePageNavigation) => {
       setResponsiblePerson(null);
       return;
     }
-    
+
     setIsLoadingPerson(true);
     try {
       // 메시지의 모든 options에서 text를 키워드로 사용
       const keywords = message.options?.map(option => option.text) || [];
-      
+
       // 메시지 내용에서도 키워드 추출 (문자열인 경우)
       if (typeof message.content === 'string') {
         // 메시지 내용이 "(으)로 이동했습니다." 형식인 경우 처리
@@ -130,7 +89,7 @@ export const useChatHandler = (toc, handlePageNavigation) => {
           keywords.push(message.content);
         }
       }
-      
+
       if (keywords.length === 0) {
         setResponsiblePerson(null);
         return;
@@ -147,10 +106,10 @@ export const useChatHandler = (toc, handlePageNavigation) => {
           return undefined;
         })
         .filter(person => person !== undefined);
-      
+
       // 실제 API 호출 대신 setTimeout으로 지연 효과 추가
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       if (persons.length > 0) {
         setResponsiblePerson(persons);
       } else {
@@ -190,10 +149,17 @@ export const useChatHandler = (toc, handlePageNavigation) => {
       return;
     }
 
-    // Find all level 2 items (first actual TOC items)
-    const topLevelItems = toc.filter((item) => item.level === 2);
+    // Check if there's only one level 1 item
+    const level1Items = toc.filter(item => item.level === 1);
+    const startFromLevel2 = level1Items.length === 1;
 
-    if (topLevelItems.length > 0) {
+    // If there's only one level 1 item, show level 2 items
+    // Otherwise, show level 1 items
+    const initialItems = startFromLevel2
+      ? toc.filter(item => item.level === 2)
+      : level1Items;
+
+    if (initialItems.length > 0) {
       setChatHistory([
         {
           type: "bot",
@@ -204,7 +170,7 @@ export const useChatHandler = (toc, handlePageNavigation) => {
               </span>
             </div>
           ),
-          options: topLevelItems.map((item) => ({
+          options: initialItems.map((item) => ({
             text: item.title,
             page: item.page,
             level: item.level,
@@ -212,8 +178,8 @@ export const useChatHandler = (toc, handlePageNavigation) => {
         },
       ]);
     } else {
-      // If no level 2 items found, show all items except level 1
-      const nonTitleItems = toc.filter((item) => item.level > 1);
+      // If no items found at the desired level, show all items except level 1
+      const fallbackItems = toc.filter(item => item.level > 1);
       setChatHistory([
         {
           type: "bot",
@@ -224,7 +190,7 @@ export const useChatHandler = (toc, handlePageNavigation) => {
               </span>
             </div>
           ),
-          options: nonTitleItems.map((item) => ({
+          options: fallbackItems.map((item) => ({
             text: item.title,
             page: item.page,
             level: item.level,
@@ -312,12 +278,12 @@ export const useChatHandler = (toc, handlePageNavigation) => {
       setJiraIssues(null);
       return;
     }
-    
+
     setIsLoadingJira(true);
     try {
       // 메시지의 모든 options에서 text를 키워드로 사용
       const keywords = message.options?.map(option => option.text) || [];
-      
+
       // 메시지 내용에서도 키워드 추출 (문자열인 경우)
       if (typeof message.content === 'string') {
         // 메시지 내용이 "(으)로 이동했습니다." 형식인 경우 처리
@@ -329,7 +295,7 @@ export const useChatHandler = (toc, handlePageNavigation) => {
           keywords.push(message.content);
         }
       }
-      
+
       if (keywords.length === 0) {
         setJiraIssues(null);
         return;
@@ -348,10 +314,10 @@ export const useChatHandler = (toc, handlePageNavigation) => {
           return undefined;
         })
         .filter(item => item !== undefined);
-      
+
       // 실제 API 호출 대신 setTimeout으로 지연 효과 추가
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       if (issues.length > 0) {
         setJiraIssues(issues);
       } else {
