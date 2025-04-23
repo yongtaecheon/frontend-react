@@ -52,7 +52,16 @@ function App() {
     setHighlightKeyword(keyword || "");
   };
 
-  const { chatHistory, chatContainerRef, resetChat, handleOptionClick } = useChatHandler(toc, handlePageNavigation);
+  const { 
+    chatHistory, 
+    chatContainerRef, 
+    resetChat, 
+    handleOptionClick,
+    handleIconClick,
+    responsiblePerson,
+    isLoadingPerson,
+    selectedKeyword
+  } = useChatHandler(toc, handlePageNavigation);
 
   const { documents, loadDocuments } = useDocumentHandler();
   const [shouldResetChat, setShouldResetChat] = useState(false);
@@ -189,7 +198,16 @@ function App() {
         {pdfLoading && !pdfFile && <LoadingSpinner className="overlay" />}
       </div>
       <div className="right-panel">
-        <ChatPanel chatHistory={chatHistory} onOptionClick={handleOptionClick} ref={chatContainerRef} toc={toc} />
+        <ChatPanel 
+          chatHistory={chatHistory} 
+          onOptionClick={handleOptionClick} 
+          ref={chatContainerRef} 
+          toc={toc}
+          handleIconClick={handleIconClick}
+          responsiblePerson={responsiblePerson}
+          isLoadingPerson={isLoadingPerson}
+          selectedKeyword={selectedKeyword}
+        />
       </div>
     </div>
   );
