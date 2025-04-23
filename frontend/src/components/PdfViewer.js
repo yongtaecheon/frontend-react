@@ -541,8 +541,8 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
       <div className="pdf-viewer">
         {isLoading && <LoadingSpinner />}
         <div style={{ display: isLoading ? 'none' : 'block' }}>
-          <Document
-            file={pdfFile}
+        <Document
+          file={pdfFile}
             onLoadSuccess={({ numPages }) => {
               onDocumentLoadSuccess({ numPages });
               setIsDocumentLoaded(true);
@@ -565,18 +565,18 @@ const PdfViewer = ({ pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadS
               />
             ) : (
               Array.from(new Array(numPages), (el, index) => (
-                <Page
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  scale={scale}
+            <Page
+              key={`page_${index + 1}`}
+              pageNumber={index + 1}
+              scale={scale}
                   className="pdf-page"
                   renderTextLayer={true}
-                  renderAnnotationLayer={true}
+              renderAnnotationLayer={true}
                   loading={null}
-                />
+            />
               ))
             )}
-          </Document>
+        </Document>
         </div>
       </div>
     </div>
