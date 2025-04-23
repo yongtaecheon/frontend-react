@@ -10570,5 +10570,371 @@
         "page": 811
       }
     ]
+  },
+  {
+    "filename": "LG_HomePreview_QCard_Metadata_Specification_V1.4.pdf",
+    "title": "LG_HomePreview_QCard_Metadata_Specification_V1.4",
+    "toc": []
+  },
+  {
+    "filename": "XR18.pdf",
+    "title": "XR18",
+    "toc": [
+      {
+        "level": 1,
+        "title": "Important Safety Instructions",
+        "page": 1
+      },
+      {
+        "level": 1,
+        "title": "Legal Disclaimer",
+        "page": 1
+      },
+      {
+        "level": 1,
+        "title": "Limited warranty",
+        "page": 1
+      },
+      {
+        "level": 1,
+        "title": "1.  Introduction",
+        "page": 3
+      },
+      {
+        "level": 1,
+        "title": "2.  Callouts",
+        "page": 4
+      },
+      {
+        "level": 2,
+        "title": "2.1  X18/XR18 Callouts",
+        "page": 4
+      },
+      {
+        "level": 2,
+        "title": "2.2  XR16/XR12 Callouts",
+        "page": 5
+      },
+      {
+        "level": 1,
+        "title": "3.  Hookup",
+        "page": 6
+      },
+      {
+        "level": 2,
+        "title": "3.1  X18/XR18 Hookups",
+        "page": 6
+      },
+      {
+        "level": 2,
+        "title": "3.2  XR16/XR12 Hookups",
+        "page": 10
+      },
+      {
+        "level": 1,
+        "title": "4.  Network Connection",
+        "page": 13
+      },
+      {
+        "level": 2,
+        "title": "4.1  IP Address and DHCP",
+        "page": 13
+      },
+      {
+        "level": 2,
+        "title": "4.2  Ethernet/LAN",
+        "page": 13
+      },
+      {
+        "level": 2,
+        "title": "4.3  Wifi Client",
+        "page": 13
+      },
+      {
+        "level": 2,
+        "title": "4.4  Access Point",
+        "page": 14
+      },
+      {
+        "level": 2,
+        "title": "4.5  Getting Started",
+        "page": 14
+      },
+      {
+        "level": 1,
+        "title": "5.  X AIR for iPad",
+        "page": 15
+      },
+      {
+        "level": 2,
+        "title": "5.1  Main Screen",
+        "page": 15
+      },
+      {
+        "level": 2,
+        "title": "5.2  Input",
+        "page": 15
+      },
+      {
+        "level": 2,
+        "title": "5.3  Sends",
+        "page": 15
+      },
+      {
+        "level": 2,
+        "title": "5.4  Gate",
+        "page": 16
+      },
+      {
+        "level": 2,
+        "title": "5.5  Dynamics",
+        "page": 16
+      },
+      {
+        "level": 2,
+        "title": "5.6  Channel EQ",
+        "page": 17
+      },
+      {
+        "level": 2,
+        "title": "5.7  Insert",
+        "page": 17
+      },
+      {
+        "level": 2,
+        "title": "5.8  Presets",
+        "page": 17
+      },
+      {
+        "level": 2,
+        "title": "5.9  Output",
+        "page": 17
+      },
+      {
+        "level": 2,
+        "title": "5.10  Meters",
+        "page": 17
+      },
+      {
+        "level": 2,
+        "title": "5.11  Shows",
+        "page": 17
+      },
+      {
+        "level": 2,
+        "title": "5.12  Routing",
+        "page": 18
+      },
+      {
+        "level": 2,
+        "title": "5.13  Effects",
+        "page": 18
+      },
+      {
+        "level": 2,
+        "title": "5.14  Setup",
+        "page": 18
+      },
+      {
+        "level": 2,
+        "title": "5.15  Main EQ",
+        "page": 18
+      },
+      {
+        "level": 1,
+        "title": "6.  X AIR for Android",
+        "page": 19
+      },
+      {
+        "level": 2,
+        "title": "6.1  Main View",
+        "page": 19
+      },
+      {
+        "level": 2,
+        "title": "6.2  Input",
+        "page": 19
+      },
+      {
+        "level": 2,
+        "title": "6.3  Config",
+        "page": 20
+      },
+      {
+        "level": 2,
+        "title": "6.4  Gate",
+        "page": 20
+      },
+      {
+        "level": 2,
+        "title": "6.5  EQ",
+        "page": 20
+      },
+      {
+        "level": 2,
+        "title": "6.6  Dynamics",
+        "page": 21
+      },
+      {
+        "level": 2,
+        "title": "6.7  Sends",
+        "page": 21
+      },
+      {
+        "level": 2,
+        "title": "6.8  Main",
+        "page": 21
+      },
+      {
+        "level": 2,
+        "title": "6.9  Meters",
+        "page": 22
+      },
+      {
+        "level": 2,
+        "title": "6.10  Effect Rack",
+        "page": 22
+      },
+      {
+        "level": 2,
+        "title": "6.11  Snapshots",
+        "page": 22
+      },
+      {
+        "level": 2,
+        "title": "6.12  Scenes and Shows",
+        "page": 22
+      },
+      {
+        "level": 2,
+        "title": "6.13  Routing",
+        "page": 22
+      },
+      {
+        "level": 2,
+        "title": "6.14  Setup",
+        "page": 23
+      },
+      {
+        "level": 1,
+        "title": "7.  X AIR for PC",
+        "page": 24
+      },
+      {
+        "level": 2,
+        "title": "7.1  Main View and Mixer Tab",
+        "page": 24
+      },
+      {
+        "level": 2,
+        "title": "7.2  Channel Tab",
+        "page": 24
+      },
+      {
+        "level": 2,
+        "title": "7.3  Input Tab",
+        "page": 25
+      },
+      {
+        "level": 2,
+        "title": "7.4  Gate Tab",
+        "page": 25
+      },
+      {
+        "level": 2,
+        "title": "7.5  EQ Tab",
+        "page": 25
+      },
+      {
+        "level": 2,
+        "title": "7.6  Comp Tab",
+        "page": 26
+      },
+      {
+        "level": 2,
+        "title": "7.7  Sends Tab",
+        "page": 26
+      },
+      {
+        "level": 2,
+        "title": "7.8  Main Tab",
+        "page": 26
+      },
+      {
+        "level": 2,
+        "title": "7.9  FX Tab",
+        "page": 26
+      },
+      {
+        "level": 2,
+        "title": "7.10  Meter Tab",
+        "page": 27
+      },
+      {
+        "level": 2,
+        "title": "7.11  Setup Menu",
+        "page": 27
+      },
+      {
+        "level": 2,
+        "title": "7.12  Snapshot Page",
+        "page": 28
+      },
+      {
+        "level": 2,
+        "title": "7.13  Utilities",
+        "page": 28
+      },
+      {
+        "level": 2,
+        "title": "7.14  Auto Mix",
+        "page": 29
+      },
+      {
+        "level": 1,
+        "title": "8.  MIDI",
+        "page": 30
+      },
+      {
+        "level": 1,
+        "title": "9.  Specifications",
+        "page": 31
+      },
+      {
+        "level": 2,
+        "title": "9.1  X18/XR18 Specifications",
+        "page": 31
+      },
+      {
+        "level": 2,
+        "title": "9.2  XR16/XR12 Specifications",
+        "page": 33
+      },
+      {
+        "level": 1,
+        "title": "10.  Effect Descriptions",
+        "page": 34
+      },
+      {
+        "level": 1,
+        "title": "11.  Instructional Videos",
+        "page": 41
+      },
+      {
+        "level": 1,
+        "title": "12.  Block Diagrams",
+        "page": 42
+      },
+      {
+        "level": 2,
+        "title": "12.1  X18/XR18 Block Diagram",
+        "page": 42
+      },
+      {
+        "level": 2,
+        "title": "12.2  XR16/XR12 Block Diagramv",
+        "page": 43
+      }
+    ]
   }
 ]
