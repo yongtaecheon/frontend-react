@@ -150,8 +150,7 @@
 
 .search-header {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  justify-content: space-between;
 }
 
 .search-header h3 {
@@ -169,9 +168,21 @@
 }
 
 .search-input-container {
-  position: relative;
+  width: 85%;
+}
+
+.search-refresh-button {
+  background-color: var(--color-white);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  width: 47px;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+.search-refresh-button:hover {
+  background-color: var(--color-light-gray);
+  transition: background-color 0.5s;
 }
 
 .search-input {

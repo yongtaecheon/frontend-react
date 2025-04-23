@@ -50,8 +50,10 @@ const ChatPanel = forwardRef(({ chatHistory, onOptionClick, toc }, ref) => {
               onChange={handleSearch}
               className="search-input"
             />
-            <span className="material-symbols-outlined send-icon">chevron_right</span>
           </div>
+          <button className="search-refresh-button" onClick={() => onOptionClick({ text: "reset", page: 1, level: 1 })}>
+            <span className="material-symbols-outlined">refresh</span>
+          </button>
         </div>
         {searchQuery && (
           <div className="keyword-buttons">
