@@ -25,7 +25,7 @@ const LeftPanel = ({
     e.stopPropagation(); // 문서 클릭 이벤트 전파 방지
     setEditingDocId(doc.filename);
     setEditTitle(doc.title);
-    
+
     // 다음 렌더링 후 입력 필드에 포커스
     setTimeout(() => {
       if (editInputRef.current) {
@@ -37,7 +37,7 @@ const LeftPanel = ({
 
   const handleDelete = async (e, doc) => {
     e.stopPropagation(); // 문서 클릭 이벤트 전파 방지
-    
+
     if (onDeleteDocument) {
       await onDeleteDocument(doc);
     }
@@ -70,7 +70,7 @@ const LeftPanel = ({
         }
       }
     }
-    
+
     setEditingDocId(null);
   };
 
@@ -99,7 +99,7 @@ const LeftPanel = ({
               key={index}
               className={`document-item ${isCurrentDocument(doc) ? "active" : ""}`}
               onClick={() => onDocumentClick(doc)}
-              title={doc.filename}
+              title={doc.title}
             >
               {editingDocId === doc.filename ? (
                 <input
