@@ -149,17 +149,38 @@ export const useChatHandler = (toc, handlePageNavigation) => {
       return;
     }
 
-    // Check if there's only one level 1 item
-    const level1Items = toc.filter(item => item.level === 1);
-    const startFromLevel2 = level1Items.length === 1;
+    // level 1 항목의 개수를 확인
+    const level1Items = toc.filter((item) => item.level === 1);
 
-    // If there's only one level 1 item, show level 2 items
-    // Otherwise, show level 1 items
-    const initialItems = startFromLevel2
-      ? toc.filter(item => item.level === 2)
-      : level1Items;
+    // level 1이 하나만 있는 경우 level 2 항목을 보여줌
+    if (level1Items.length === 1) {
+      const level2Items = toc.filter((item) => item.level === 2);
+      if (level2Items.length > 0) {
+        setChatHistory([
+          {
+            type: "bot",
+            content: (
+              <div>
+                <span>
+                  목차 키워드를 선택하세요 <span className="material-symbols-outlined">pets</span>
+                </span>
+              </div>
+            ),
+            options: level2Items.map((item) => ({
+              text: item.title,
+              page: item.page,
+              level: item.level,
+            })),
+          },
+        ]);
+        return;
+      }
+    }
 
-    if (initialItems.length > 0) {
+    // level 1이 여러 개이거나 level 2가 없는 경우 level 1부터 보여줌
+    const topLevelItems = level1Items.length > 0 ? level1Items : toc.filter((item) => item.level === 2);
+
+    if (topLevelItems.length > 0) {
       setChatHistory([
         {
           type: "bot",
@@ -170,7 +191,7 @@ export const useChatHandler = (toc, handlePageNavigation) => {
               </span>
             </div>
           ),
-          options: initialItems.map((item) => ({
+          options: topLevelItems.map((item) => ({
             text: item.title,
             page: item.page,
             level: item.level,
@@ -178,8 +199,8 @@ export const useChatHandler = (toc, handlePageNavigation) => {
         },
       ]);
     } else {
-      // If no items found at the desired level, show all items except level 1
-      const fallbackItems = toc.filter(item => item.level > 1);
+      // 모든 항목 보여주기 (level 1 제외)
+      const nonTitleItems = toc.filter((item) => item.level > 1);
       setChatHistory([
         {
           type: "bot",
@@ -190,7 +211,7 @@ export const useChatHandler = (toc, handlePageNavigation) => {
               </span>
             </div>
           ),
-          options: fallbackItems.map((item) => ({
+          options: nonTitleItems.map((item) => ({
             text: item.title,
             page: item.page,
             level: item.level,

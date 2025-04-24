@@ -55,6 +55,10 @@ const ChatPanel = forwardRef(({
           currentIndex--;
           const currentItem = toc[currentIndex];
           if (currentItem.level < currentLevel) {
+            // level 1이 하나만 있는 경우 level 2부터 시작
+            if (currentItem.level === 1 && toc.filter(t => t.level === 1).length === 1) {
+              continue;
+            }
             parentSections.unshift(currentItem);
             currentLevel = currentItem.level;
           }
@@ -88,15 +92,11 @@ const ChatPanel = forwardRef(({
 
   const filteredKeywords = toc
     .filter((item) => {
-      const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase());
-      // Check if there's only one level 1 item
-      const level1Items = toc.filter(item => item.level === 1);
-      const startFromLevel2 = level1Items.length === 1;
-
-      if (startFromLevel2) {
-        return matchesSearch && item.level >= 2;
+      // level 1이 하나만 있는 경우 level 2 이상의 항목만 표시
+      if (toc.filter(t => t.level === 1).length === 1 && item.level === 1) {
+        return false;
       }
-      return matchesSearch;
+      return item.title.toLowerCase().includes(searchQuery.toLowerCase());
     })
     .map((item) => ({
       text: item.title,
