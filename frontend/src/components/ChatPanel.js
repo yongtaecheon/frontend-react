@@ -152,7 +152,11 @@ const ChatPanel = forwardRef(({
                         className="option-path-item"
                         style={{ '--depth': parentIdx }}
                       >
-                        {parent.title}
+                        {parentIdx === 0 ? '📁 ' : '📄 '}
+                        <span style={{ fontWeight: parentIdx === option.parents.length - 1 ? 'bold' : 'normal' }}>
+                          {parent.title}
+                        </span>
+                        {parentIdx < option.parents.length - 1 && ' >'}
                       </div>
                     ))}
                   </div>

@@ -189,6 +189,9 @@
   transition: opacity 0.2s, transform 0.2s;
   z-index: 1000;
   min-width: 200px;
+  max-width: 400px;
+  width: fit-content;
+  word-wrap: break-word;
 }
 
 .option-button:hover + .option-path-tooltip {
