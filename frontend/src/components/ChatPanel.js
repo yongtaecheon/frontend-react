@@ -43,24 +43,18 @@ const ChatPanel = forwardRef(({
       };
 
       // Create a formatted message with parent sections
-      let formattedContent = '검색 결과:';
       const formattedResults = matchingItems.map(item => {
-        // Find parent sections
+        // Find all parent sections by tracking parentIds
         const parentSections = [];
-        let currentLevel = item.level;
-        let currentIndex = toc.indexOf(item);
+        let currentItem = item;
 
-        // Walk backwards through the TOC to find parent sections
-        while (currentIndex > 0 && currentLevel > (startFromLevel2 ? 2 : 1)) {
-          currentIndex--;
-          const currentItem = toc[currentIndex];
-          if (currentItem.level < currentLevel) {
-            // level 1이 하나만 있는 경우 level 2부터 시작
-            if (currentItem.level === 1 && toc.filter(t => t.level === 1).length === 1) {
-              continue;
-            }
-            parentSections.unshift(currentItem);
-            currentLevel = currentItem.level;
+        while (currentItem.parentId) {
+          const parent = toc.find(t => t.id === currentItem.parentId);
+          if (parent) {
+            parentSections.unshift(parent);
+            currentItem = parent;
+          } else {
+            break;
           }
         }
 
