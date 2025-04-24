@@ -51,7 +51,7 @@ const LandingPage = () => {
           <p>
             포비는 목차 기반 검색을 통한 문서 도우미입니다.
             <br />
-            파일을 업로드하여 FOBI의 도움을 받아보세요.
+            파일을 업로드하여 포비의 도움을 받아보세요.
           </p>
           <div className="upload-button-container">
             <button

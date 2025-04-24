@@ -1,83 +1,26 @@
-# PDF Table of Contents Viewer
+# FOBI (File Oriented Bot Interface) 🐻‍❄️
 
-A web application that allows users to upload PDF documents and view their table of contents in a tree structure alongside the PDF viewer.
+FOBI는 LG전자 부트캠프 9기에서 개발한 지능형 문서 도우미입니다. PDF 문서를 업로드하면 목차를 자동으로 추출하고, 내용을 분석하여 대화형 인터페이스를 통해 문서 내용에 대한 질문에 답변해드립니다.
 
-## Features
+## ✨ 주요 기능
 
-- PDF file upload
-- Automatic table of contents extraction
-- Three-column layout:
-  - Left: File upload and TOC
-  - Center: PDF viewer
-  - Right: TOC navigation
-- Interactive TOC navigation
+### 📚 문서 관리
 
-## Prerequisites
+- PDF 파일 업로드 및 관리
+- 문서 목차 자동 추출
+- 문서 제목 수정 및 삭제
+- 여러 문서 동시 관리 가능
 
-- Python 3.7+
-- Node.js 14+
-- npm or yarn
+### 💬 대화형 인터페이스
 
-## Setup
+- 문서 내용 기반 질의응답
+- 목차 기반 문서 탐색
+- 키워드 하이라이팅
+- 문맥 기반 대화 기능
 
-1. Clone the repository
-2. Set up the backend:
-   ```bash
-   # Create and activate virtual environment
-   python -m venv venv
-   # On Windows:
-   .\venv\Scripts\activate
-   # On Unix/MacOS:
-   source venv/bin/activate
+### 🎯 특별 기능
 
-   # Install dependencies
-   pip install -r requirements.txt
-   ```
-
-3. Set up the frontend:
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-## Running the Application
-
-1. Start the backend server:
-   ```bash
-   # From the root directory
-   python app.py
-   ```
-
-2. Start the frontend development server:
-   ```bash
-   # From the frontend directory
-   npm start
-   ```
-
-3. Open your browser and navigate to `http://localhost:3000`
-
-## Usage
-
-1. Click the file input in the left panel to upload a PDF file
-2. The table of contents will be automatically extracted and displayed
-3. Click on any TOC item to navigate to that section in the PDF
-4. Use the PDF viewer in the center panel to read the document
-
-## Project Structure
-
-```
-.
-├── app.py              # Flask backend server
-├── requirements.txt    # Python dependencies
-├── frontend/          # React frontend
-│   ├── package.json
-│   └── src/
-│       ├── App.js
-│       └── App.css
-└── uploads/           # Directory for uploaded PDFs
-```
-
-## Technologies Used
-
-- Backend: Python, Flask, PyMuPDF
-- Frontend: React, react-pdf, axios
+- JIRA 이슈 연동
+- 담당자 자동 추천
+- 문서 내 키워드 검색
+- PDF 뷰어 확대/축소
