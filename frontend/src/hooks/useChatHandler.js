@@ -7,22 +7,22 @@ const MOCK_RESPONSIBLE_PERSONS = {
     team: "서비스 표준팀",
     role: "서비스 표준 전문가",
     phoneNumber: "010-1234-5678",
-    email: "kim.service@kbs.co.kr"
+    email: "kim.service@kbs.co.kr",
   },
   "데이터 구조": {
     name: "이데이터",
     team: "데이터 구조팀",
     role: "데이터 구조 전문가",
     phoneNumber: "010-2345-6789",
-    email: "lee.data@kbs.co.kr"
+    email: "lee.data@kbs.co.kr",
   },
   "서비스 정보": {
     name: "박정보",
     team: "서비스 정보팀",
     role: "서비스 정보 전문가",
     phoneNumber: "010-3456-7890",
-    email: "park.info@kbs.co.kr"
-  }
+    email: "park.info@kbs.co.kr",
+  },
 };
 
 // Jira 이슈 목데이터
@@ -30,25 +30,25 @@ const MOCK_JIRA_ISSUES = {
   "서비스 표준": [
     {
       title: "서비스 표준 문서 업데이트 필요",
-      url: "https://jira.example.com/browse/PROJ-123"
+      url: "https://jira.example.com/browse/PROJ-123",
     },
     {
       title: "서비스 표준 검토 요청",
-      url: "https://jira.example.com/browse/PROJ-124"
-    }
+      url: "https://jira.example.com/browse/PROJ-124",
+    },
   ],
   "데이터 구조": [
     {
       title: "데이터 구조 개선 작업",
-      url: "https://jira.example.com/browse/PROJ-125"
-    }
+      url: "https://jira.example.com/browse/PROJ-125",
+    },
   ],
   "서비스 정보": [
     {
       title: "서비스 정보 업데이트",
-      url: "https://jira.example.com/browse/PROJ-126"
-    }
-  ]
+      url: "https://jira.example.com/browse/PROJ-126",
+    },
+  ],
 };
 
 export const useChatHandler = (toc, handlePageNavigation) => {
@@ -76,10 +76,10 @@ export const useChatHandler = (toc, handlePageNavigation) => {
     setIsLoadingPerson(true);
     try {
       // 메시지의 모든 options에서 text를 키워드로 사용
-      const keywords = message.options?.map(option => option.text) || [];
+      const keywords = message.options?.map((option) => option.text) || [];
 
       // 메시지 내용에서도 키워드 추출 (문자열인 경우)
-      if (typeof message.content === 'string') {
+      if (typeof message.content === "string") {
         // 메시지 내용이 "(으)로 이동했습니다." 형식인 경우 처리
         const match = message.content.match(/^(.*?)\(으\)로 이동했습니다\.$/);
         if (match && match[1]) {
@@ -98,17 +98,17 @@ export const useChatHandler = (toc, handlePageNavigation) => {
       const uniqueKeywords = [...new Set(keywords)];
 
       const persons = uniqueKeywords
-        .map(keyword => {
+        .map((keyword) => {
           const person = MOCK_RESPONSIBLE_PERSONS[keyword];
           if (person) {
             return { ...person, keyword };
           }
           return undefined;
         })
-        .filter(person => person !== undefined);
+        .filter((person) => person !== undefined);
 
       // 실제 API 호출 대신 setTimeout으로 지연 효과 추가
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       if (persons.length > 0) {
         setResponsiblePerson(persons);
@@ -222,7 +222,7 @@ export const useChatHandler = (toc, handlePageNavigation) => {
   };
 
   const handleOptionClick = (option) => {
-    if (option.type === 'addMessages') {
+    if (option.type === "addMessages") {
       setChatHistory((prev) => [...prev, ...option.messages]);
       return;
     }
@@ -303,10 +303,10 @@ export const useChatHandler = (toc, handlePageNavigation) => {
     setIsLoadingJira(true);
     try {
       // 메시지의 모든 options에서 text를 키워드로 사용
-      const keywords = message.options?.map(option => option.text) || [];
+      const keywords = message.options?.map((option) => option.text) || [];
 
       // 메시지 내용에서도 키워드 추출 (문자열인 경우)
-      if (typeof message.content === 'string') {
+      if (typeof message.content === "string") {
         // 메시지 내용이 "(으)로 이동했습니다." 형식인 경우 처리
         const match = message.content.match(/^(.*?)\(으\)로 이동했습니다\.$/);
         if (match && match[1]) {
@@ -327,17 +327,17 @@ export const useChatHandler = (toc, handlePageNavigation) => {
 
       // 목데이터에서 일치하는 모든 Jira 이슈 찾기
       const issues = uniqueKeywords
-        .map(keyword => {
+        .map((keyword) => {
           const issueList = MOCK_JIRA_ISSUES[keyword];
           if (issueList) {
             return { keyword, issues: issueList };
           }
           return undefined;
         })
-        .filter(item => item !== undefined);
+        .filter((item) => item !== undefined);
 
       // 실제 API 호출 대신 setTimeout으로 지연 효과 추가
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       if (issues.length > 0) {
         setJiraIssues(issues);
@@ -365,6 +365,7 @@ export const useChatHandler = (toc, handlePageNavigation) => {
 
   return {
     chatHistory,
+    setChatHistory,
     chatContainerRef,
     resetChat,
     handleOptionClick,
@@ -374,6 +375,6 @@ export const useChatHandler = (toc, handlePageNavigation) => {
     responsiblePerson,
     isLoadingPerson,
     jiraIssues,
-    isLoadingJira
+    isLoadingJira,
   };
 };

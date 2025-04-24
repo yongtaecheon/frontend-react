@@ -35,17 +35,18 @@ const LandingPage = ({ setIsAppActive, onFileChange, isLoading }) => {
             <br />
             파일을 업로드하여 FOBI의 도움을 받아보세요.
           </p>
-
-          <button
-            className="upload-button-new"
-            onClick={() => document.getElementById("landing-file-input-new").click()}
-            disabled={isLoading}
-          >
-            {isLoading ? "파일 업로드 중..." : "파일 업로드"}
-          </button>
-          <button className="upload-button-new" onClick={() => setIsAppActive(true)}>
-            바로 시작하기
-          </button>
+          <div className="upload-button-container">
+            <button
+              className="upload-button-new"
+              onClick={() => document.getElementById("landing-file-input-new").click()}
+              disabled={isLoading}
+            >
+              {isLoading ? "파일 업로드 중..." : "파일 업로드"}
+            </button>
+            <button className="upload-button-new" onClick={() => setIsAppActive(true)}>
+              바로 시작하기
+            </button>
+          </div>
           <input
             id="landing-file-input-new"
             type="file"

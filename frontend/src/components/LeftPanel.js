@@ -17,7 +17,7 @@ const LeftPanel = ({
 
   const isCurrentDocument = (doc) => {
     if (!currentPdfFile || !doc) return false;
-    const currentFileName = currentPdfFile.split("/").pop();
+    const currentFileName = currentPdfFile.split("=").pop();
     return doc.title === currentFileName;
   };
 
@@ -88,7 +88,7 @@ const LeftPanel = ({
           </button>
         </div>
         <button onClick={() => document.getElementById("file-input").click()} className="file-upload-button">
-          File Upload
+          파일 업로드
         </button>
         <input id="file-input" type="file" accept=".pdf" onChange={onFileChange} style={{ display: "none" }} />
         <img src="/poby_leftpanel.png" alt="" className="panel-image" />

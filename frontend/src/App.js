@@ -52,10 +52,11 @@ function App() {
     setHighlightKeyword(keyword || "");
   };
 
-  const { 
-    chatHistory, 
-    chatContainerRef, 
-    resetChat, 
+  const {
+    chatHistory,
+    setChatHistory,
+    chatContainerRef,
+    resetChat,
     handleOptionClick,
     handleIconClick,
     handleJiraIconClick,
@@ -63,7 +64,7 @@ function App() {
     isLoadingPerson,
     selectedKeyword,
     jiraIssues,
-    isLoadingJira
+    isLoadingJira,
   } = useChatHandler(toc, handlePageNavigation);
 
   const { documents, loadDocuments } = useDocumentHandler();
@@ -145,9 +146,10 @@ function App() {
         await handleLoadDocuments();
         console.log("삭제 성공");
         // 현재 선택된 문서가 삭제된 경우 처리
-        if (pdfFile && pdfFile.includes(doc.filename)) {
+        if (pdfFile && pdfFile.includes(doc.title)) {
           setPdfFile(null);
           setToc([]);
+          setChatHistory([]);
         }
 
         return true;
@@ -199,10 +201,10 @@ function App() {
         {pdfLoading && !pdfFile && <LoadingSpinner className="overlay" />}
       </div>
       <div className="right-panel">
-        <ChatPanel 
-          chatHistory={chatHistory} 
-          onOptionClick={handleOptionClick} 
-          ref={chatContainerRef} 
+        <ChatPanel
+          chatHistory={chatHistory}
+          onOptionClick={handleOptionClick}
+          ref={chatContainerRef}
           toc={toc}
           handleIconClick={handleIconClick}
           handleJiraIconClick={handleJiraIconClick}
