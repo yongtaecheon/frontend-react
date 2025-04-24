@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, forwardRef } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
@@ -7,10 +7,16 @@ import "../styles/components/PDFViewer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-const PdfViewer = (
-  { pdfFile, pdfKey, numPages, scale, setScale, onDocumentLoadSuccess, onLoadError, highlightKeyword },
-  ref
-) => {
+const PdfViewer = forwardRef(({
+  pdfFile,
+  pdfKey,
+  numPages,
+  scale,
+  setScale,
+  onDocumentLoadSuccess,
+  onLoadError,
+  highlightKeyword
+}, ref) => {
   const containerRef = useRef(null);
   const searchInputRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -72,7 +78,7 @@ const PdfViewer = (
     const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
     allTextLayers.forEach(textLayer => {
       if (!textLayer) return;
-      
+
       try {
         // 모든 하이라이트를 제거하고 원본 텍스트로 복원합니다
         const allHighlights = textLayer.querySelectorAll('.highlight');
@@ -98,23 +104,23 @@ const PdfViewer = (
 
   const highlightText = (searchText, isSearch = false) => {
     if (!searchText) return;
-    
+
     // 먼저 모든 하이라이트를 제거합니다
     clearHighlights();
-    
+
     const results = [];
-    
+
     // 모든 텍스트 레이어를 가져옵니다
     const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
-    
+
     // 각 텍스트 레이어를 처리합니다
     allTextLayers.forEach(textLayer => {
       if (!textLayer) return;
-      
+
       // 페이지 요소를 찾습니다
       let pageElement = null;
       let currentElement = textLayer;
-      
+
       // DOM을 위로 탐색하여 페이지 요소를 찾습니다
       while (currentElement && !pageElement) {
         if (currentElement.classList && currentElement.classList.contains('react-pdf__Page')) {
@@ -123,7 +129,7 @@ const PdfViewer = (
         }
         currentElement = currentElement.parentElement;
       }
-      
+
       // 페이지 번호를 가져옵니다
       let pageNumber = 1; // 페이지를 찾을 수 없는 경우 기본값
       if (pageElement) {
@@ -132,7 +138,7 @@ const PdfViewer = (
           pageNumber = parseInt(pageNumberAttr);
         }
       }
-      
+
       // 텍스트 노드를 찾습니다
       const textNodes = [];
       const walker = document.createTreeWalker(
@@ -141,35 +147,35 @@ const PdfViewer = (
         null,
         false
       );
-      
+
       let node;
       while ((node = walker.nextNode())) {
         if (node && node.textContent) {
           textNodes.push(node);
         }
       }
-      
+
       // 각 텍스트 노드를 처리합니다
       textNodes.forEach(node => {
         if (!node || !node.parentNode) return;
-        
+
         const nodeText = node.textContent;
         const searchLower = searchText.toLowerCase();
         const nodeLower = nodeText.toLowerCase();
-        
+
         if (nodeLower.includes(searchLower)) {
           // 텍스트를 하이라이트된 버전으로 대체합니다
           const escapedText = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           const regex = new RegExp(`(${escapedText})`, 'gi');
-          
+
           // 원본 텍스트를 하이라이트된 텍스트로 대체합니다
           const span = document.createElement('span');
           span.innerHTML = nodeText.replace(regex, '<span class="highlight' + (isSearch ? ' search' : '') + '">$1</span>');
-          
+
           // 원본 노드를 새 span으로 대체합니다
           try {
             node.parentNode.replaceChild(span, node);
-            
+
             // 검색 결과를 수집합니다
             if (isSearch) {
               const highlights = span.querySelectorAll('.highlight');
@@ -275,12 +281,12 @@ const PdfViewer = (
       // Clear search when closing
       setSearchQuery("");
       setSearchResults([]);
-      setCurrentSearchIndex(-1);      
+      setCurrentSearchIndex(-1);
       // Clear all highlights
       const allTextLayers = document.querySelectorAll('.react-pdf__Page__textContent');
       allTextLayers.forEach(textLayer => {
         if (!textLayer) return;
-        
+
         try {
           // Remove all highlights and restore original text
           const allHighlights = textLayer.querySelectorAll('.highlight');
@@ -418,7 +424,7 @@ const PdfViewer = (
               const prevMode = viewMode;
               const newMode = prevMode === "single" ? "grid" : "single";
               setViewMode(newMode);
-              
+
               // 모드 전환 후 현재 페이지 유지
               setTimeout(() => {
                 if (newMode === "grid") {
@@ -506,7 +512,7 @@ const PdfViewer = (
                 autoFocus
               />
             ) : (
-              <span 
+              <span
                 className="page-number-display"
                 onClick={() => setIsPageInputVisible(true)}
               >
@@ -561,7 +567,7 @@ const PdfViewer = (
               autoFocus
             />
           ) : (
-            <span 
+            <span
               className="zoom-display"
               onClick={() => setIsZoomInputVisible(true)}
             >
@@ -617,6 +623,6 @@ const PdfViewer = (
       </div>
     </div>
   );
-};
+});
 
-export default React.forwardRef(PdfViewer);
+export default PdfViewer;
