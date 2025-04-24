@@ -18,12 +18,12 @@ const LeftPanel = ({
   const isCurrentDocument = (doc) => {
     if (!currentPdfFile || !doc) return false;
     const currentFileName = currentPdfFile.split("/").pop();
-    return doc.filename === currentFileName;
+    return doc.title === currentFileName;
   };
 
   const handleEdit = (e, doc) => {
     e.stopPropagation(); // 문서 클릭 이벤트 전파 방지
-    setEditingDocId(doc.filename);
+    setEditingDocId(doc.title);
     setEditTitle(doc.title);
 
     // 다음 렌더링 후 입력 필드에 포커스
@@ -48,9 +48,9 @@ const LeftPanel = ({
   };
 
   const handleTitleKeyDown = (e, doc) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       saveTitle(doc);
-    } else if (e.key === 'Escape') {
+    } else if (e.key === "Escape") {
       cancelEdit();
     }
   };
@@ -101,7 +101,7 @@ const LeftPanel = ({
               onClick={() => onDocumentClick(doc)}
               title={doc.title}
             >
-              {editingDocId === doc.filename ? (
+              {editingDocId === doc.title ? (
                 <input
                   ref={editInputRef}
                   type="text"

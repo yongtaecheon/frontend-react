@@ -23,7 +23,7 @@ function App() {
   const [toc, setToc] = useState([]);
   const pdfViewerRef = useRef(null);
   const [highlightKeyword, setHighlightKeyword] = useState("");
-
+  const server_URL = `${process.env.REACT_APP_SERVER_URL}`;
   const {
     pdfFile,
     pdfKey,
@@ -104,10 +104,8 @@ function App() {
   const updateDocumentTitle = async (doc, newTitle) => {
     try {
       // 서버에 제목 변경 요청 보내기
-      const response = await axios.put(`http://localhost:8000/api/documents/${doc.filename}`, {
-        title: newTitle
-      });
-      
+      const response = await axios.put(`${server_URL}/files?oldName=${doc.title}&newName=${newTitle}`);
+
       if (response.status === 200) {
         // 성공적으로 업데이트되면 문서 목록 다시 로드
         await handleLoadDocuments();
@@ -126,20 +124,20 @@ function App() {
       if (!window.confirm(`"${doc.title}" 문서를 삭제하시겠습니까?`)) {
         return false;
       }
-      
+
       // 서버에 삭제 요청 보내기
-      const response = await axios.delete(`http://localhost:8000/api/documents/${doc.filename}`);
-      
+      const response = await axios.delete(`${server_URL}/files?fileName=${doc.title}`);
+
       if (response.status === 200) {
         // 성공적으로 삭제되면 문서 목록 다시 로드
         await handleLoadDocuments();
-        
+        console.log("삭제 성공");
         // 현재 선택된 문서가 삭제된 경우 처리
         if (pdfFile && pdfFile.includes(doc.filename)) {
           setPdfFile(null);
           setToc([]);
         }
-        
+
         return true;
       }
     } catch (error) {
@@ -150,7 +148,7 @@ function App() {
   };
 
   if (!isAppActive) {
-    return <LandingPage onFileChange={onFileChange} isLoading={pdfLoading} />;
+    return <LandingPage setIsAppActive={setIsAppActive} onFileChange={onFileChange} isLoading={pdfLoading} />;
   }
 
   return (

@@ -18,12 +18,9 @@ export const usePdfHandler = () => {
 
       try {
         const server_URL = `${process.env.REACT_APP_SERVER_URL}`;
-        const local_URL = "http://localhost:8000/api/upload";
         const response = await axios.post(`${server_URL}/files`, formData, {
           headers: {
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST",
-            "Access-Control-Allow-Headers": "Content-Type",
             "Access-Control-Allow-Credentials": "true",
             "Content-Type": "multipart/form-data",
           },
@@ -32,13 +29,11 @@ export const usePdfHandler = () => {
         console.log("post: upload file");
         console.log(response.data);
 
-        const fileUrl = `${server_URL}/files/${response.data}`;
-        // const fileUrl = `http://localhost:8000/uploads/${response.data.filename}`;
+        const fileUrl = `${server_URL}/file?fileName=${response.data}`;
         setPdfFile(fileUrl);
         setPdfKey((prev) => prev + 1);
-        // return response.data.toc;
 
-        const tocResponse = await axios.get(`${server_URL}/search?filename=${response.data}`);
+        const tocResponse = await axios.get(`${server_URL}/search?fileName=${response.data}`);
         console.log("get: toc Response");
         console.log(tocResponse.data);
 
@@ -54,19 +49,19 @@ export const usePdfHandler = () => {
     setNumPages(numPages);
     setPageNumber(1);
     setIsLoading(false);
+    console.log("파일 다운로드 성공");
   }, []);
 
   const handleTocClick = useCallback((page) => {
-    const pageElement = document.querySelector(`[data-page-number="${page}"]`);
+    const pageElement = document.querySelector(`[data-page-number="${page}"]`); // 페이지 번호 찾기
     if (pageElement) {
-      pageElement.scrollIntoView({ behavior: "auto", block: "start" });
+      pageElement.scrollIntoView({ behavior: "auto", block: "start" }); // 페이지 요소 스크롤 이동
     }
   }, []);
 
   const handleDocumentClick = useCallback((document) => {
     setIsLoading(true);
-    // const fileUrl = `http://localhost:8000/uploads/${document.filename}`;
-    const fileUrl = `${process.env.REACT_APP_SERVER_URL}/files/${document.filename}`;
+    const fileUrl = `${process.env.REACT_APP_SERVER_URL}/file?fileName=${document.title}`;
     setPdfFile(fileUrl);
     setPdfKey((prev) => prev + 1);
     setPageNumber(0);

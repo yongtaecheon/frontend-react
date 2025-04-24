@@ -10,27 +10,35 @@ export const useDocumentHandler = () => {
     try {
       setIsLoading(true);
       const server_URL = `${process.env.REACT_APP_SERVER_URL}`;
-      const local_URL = "http://localhost:8000/api/documents";
-      // const response = await axios.get("http://localhost:8000/api/documents");
+
+      // 파일 이름 리스트 가져오기
       const fileNameListResponse = await axios.get(`${server_URL}/files`);
-      const wholeTocList = fileNameListResponse.data.map(async (file) => {
-        const tocResponse = await axios.get(`${server_URL}/search?filename=${file}`);
-        return tocResponse.data;
-      });
+      console.log(fileNameListResponse.data);
+
+      // Promise.all을 사용하여 모든 비동기 작업이 완료될 때까지 기다림
+      const wholeTocList = await Promise.all(
+        fileNameListResponse.data.map(async (file) => {
+          const tocResponse = await axios.get(`${server_URL}/search?fileName=${file}`);
+          return { title: file, toc: tocResponse.data };
+        })
+      );
+
       console.log("get: documents");
       console.log(wholeTocList);
-      const rawDocuments = wholeTocList;
+
+      setDocuments(wholeTocList);
 
       // 중복제거, 수정필요함
-      const uniqueDocumentsMap = new Map();
-      rawDocuments.forEach((doc) => {
-        if (!uniqueDocumentsMap.has(doc.title)) {
-          uniqueDocumentsMap.set(doc.title, doc);
-        }
-      });
-      const uniqueDocuments = Array.from(uniqueDocumentsMap.values());
+      // const rawDocuments = wholeTocList;
+      // const uniqueDocumentsMap = new Map();
+      // rawDocuments.forEach((doc) => {
+      //   if (!uniqueDocumentsMap.has(doc.title)) {
+      //     uniqueDocumentsMap.set(doc.title, doc);
+      //   }
+      // });
+      // const uniqueDocuments = Array.from(uniqueDocumentsMap.values());
 
-      setDocuments(uniqueDocuments);
+      // setDocuments(uniqueDocuments);
     } catch (error) {
       console.error("Error loading documents:", error);
     } finally {
