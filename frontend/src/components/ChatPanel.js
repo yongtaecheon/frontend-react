@@ -134,25 +134,6 @@ const ChatPanel = forwardRef(({
                   </div>
                 </div>
               )}
-              {message.options && message.options.length > 0 && (
-                <div className="message-icons">
-                  <div className="jira-icon" onClick={() => handleJiraIconClick(message)}>
-                    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
-                      <desc>Jira Streamline Icon: https://streamlinehq.com</desc>
-                      <title>Jira</title>
-                      <path d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0 -1.005 -1.005zm5.723 -5.756H5.736a5.215 5.215 0 0 0 5.215 5.214h2.129v2.058a5.218 5.218 0 0 0 5.215 5.214V6.758a1.001 1.001 0 0 0 -1.001 -1.001zM23.013 0H11.455a5.215 5.215 0 0 0 5.215 5.215h2.129v2.057A5.215 5.215 0 0 0 24 12.483V1.005A1.001 1.001 0 0 0 23.013 0Z" fill="#000000" strokeWidth="1"></path>
-                    </svg>
-                  </div>
-                  <div className="message-icon" onClick={() => handleIconClick(message)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14" height="14" width="14">
-                      <desc>User Multiple Group Streamline Icon: https://streamlinehq.com</desc>
-                      <g id="user-multiple-group--close-geometric-human-multiple-person-up-user">
-                        <path id="Union" fill="#000000" fillRule="evenodd" d="M8 4.50003c0 1.65685 -1.34315 3 -3 3s-3 -1.34315 -3 -3 1.34315 -3 3 -3 3 1.34315 3 3ZM5 8.5c-2.76142 0 -5 2.2386 -5 5 0 0.2761 0.223858 0.5 0.5 0.5h9c0.27614 0 0.5 -0.2239 0.5 -0.5 0 -2.7614 -2.23858 -5 -5 -5Zm8.5001 5.5h-2.3225c0.0472 -0.1584 0.0725 -0.3263 0.0725 -0.5 0 -2.0411 -0.9784 -3.85363 -2.49178 -4.99426 0.08011 -0.00381 0.16071 -0.00574 0.24176 -0.00574 2.76142 0 5.00002 2.2386 5.00002 5 0 0.2761 -0.2239 0.5 -0.5 0.5ZM9.00008 7.50003c-0.30173 0 -0.59305 -0.04455 -0.86775 -0.12742 0.69409 -0.75643 1.11775 -1.76503 1.11775 -2.87258s-0.42366 -2.11615 -1.11776 -2.87259c0.27471 -0.08287 0.56603 -0.12741 0.86776 -0.12741 1.65682 0 3.00002 1.34315 3.00002 3s-1.3432 3 -3.00002 3Z" clipRule="evenodd" strokeWidth="1"></path>
-                      </g>
-                    </svg>
-                  </div>
-                </div>
-              )}
             </div>
           )}
         </div>
