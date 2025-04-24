@@ -25,14 +25,15 @@ const PdfViewer = forwardRef(
     const [isPageInputVisible, setIsPageInputVisible] = useState(false);
     const [isZoomInputVisible, setIsZoomInputVisible] = useState(false);
     const [isZoomInputValid, setIsZoomInputValid] = useState(true);
+    const [isPageInputInvalid, setIsPageInputInvalid] = useState(false);
 
-    const zoomIn = () => {
-      setScale((prev) => Math.min(prev + 0.1, 2.0));
+  const zoomIn = () => {
+    setScale((prev) => Math.min(prev + 0.1, 2.0));
       setZoomInputValue(Math.round(Math.min(scale + 0.1, 2.0) * 100).toString());
-    };
+  };
 
-    const zoomOut = () => {
-      setScale((prev) => Math.max(prev - 0.1, 0.5));
+  const zoomOut = () => {
+    setScale((prev) => Math.max(prev - 0.1, 0.5));
       setZoomInputValue(Math.round(Math.max(scale - 0.1, 0.5) * 100).toString());
     };
 
@@ -301,6 +302,37 @@ const PdfViewer = forwardRef(
       }
     };
 
+    const handlePageInputChange = (e) => {
+      const value = e.target.value;
+      setPageInputValue(value);
+      
+      // 페이지 번호 유효성 검사
+      const pageNum = parseInt(value);
+      if (isNaN(pageNum) || pageNum < 1 || pageNum > numPages) {
+        setIsPageInputInvalid(true);
+      } else {
+        setIsPageInputInvalid(false);
+      }
+    };
+
+    const handlePageInputKeyDown = (e) => {
+      if (e.key === "Enter") {
+        const value = parseInt(pageInputValue);
+        if (!isNaN(value) && value >= 1 && value <= numPages) {
+          goToPage(value);
+          setPageInputValue(value.toString());
+          setIsPageInputVisible(false);
+          setIsPageInputInvalid(false);
+        } else {
+          setIsPageInputInvalid(true);
+        }
+      } else if (e.key === "Escape") {
+        setPageInputValue(currentPage.toString());
+        setIsPageInputVisible(false);
+        setIsPageInputInvalid(false);
+      }
+    };
+
     useEffect(() => {
       if (highlightKeyword) {
         setTimeout(() => highlightText(highlightKeyword), 1000);
@@ -404,9 +436,9 @@ const PdfViewer = forwardRef(
       return () => clearTimeout(timer);
     }, [isDocumentLoaded]);
 
-    return (
+  return (
       <div className="pdf-container" ref={containerRef}>
-        <div className="pdf-controls">
+      <div className="pdf-controls">
           <div className="pdf-controls-left">
             <button
               className="control-button"
@@ -477,28 +509,16 @@ const PdfViewer = forwardRef(
             <div className="page-display">
               {isPageInputVisible ? (
                 <input
-                  type="number"
+                  type="text"
+                  className={`page-input ${isPageInputInvalid ? 'invalid' : ''}`}
                   value={pageInputValue}
-                  onChange={(e) => {
-                    setPageInputValue(e.target.value);
-                  }}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      const value = parseInt(e.target.value);
-                      if (value >= 1 && value <= numPages) {
-                        goToPage(value);
-                        setPageInputValue(value.toString());
-                        setIsPageInputVisible(false);
-                      }
-                    }
-                  }}
+                  onChange={handlePageInputChange}
+                  onKeyDown={handlePageInputKeyDown}
                   onBlur={() => {
-                    setPageInputValue(currentPage.toString());
                     setIsPageInputVisible(false);
+                    setPageInputValue(currentPage.toString());
+                    setIsPageInputInvalid(false);
                   }}
-                  min="1"
-                  max={numPages}
-                  className="page-input"
                   autoFocus
                 />
               ) : (
@@ -506,7 +526,8 @@ const PdfViewer = forwardRef(
                   {currentPage}
                 </span>
               )}
-              <span> /&nbsp;&nbsp;&nbsp;{numPages}</span>
+              <span className="page-separator">/</span>
+              <span className="total-pages">{numPages}</span>
             </div>
             <button className="page-nav-button" onClick={goToNextPage} disabled={currentPage >= numPages}>
               <span className="material-symbols-outlined">chevron_right</span>
@@ -515,7 +536,7 @@ const PdfViewer = forwardRef(
           <div className="pdf-controls-right">
             <button className="control-button" onClick={zoomOut}>
               <span className="material-symbols-outlined">remove</span>
-            </button>
+          </button>
             {isZoomInputVisible ? (
               <input
                 type="number"
@@ -561,14 +582,14 @@ const PdfViewer = forwardRef(
             <span>%</span>
             <button className="control-button" onClick={zoomIn}>
               <span className="material-symbols-outlined">add</span>
-            </button>
-          </div>
+          </button>
         </div>
-        <div className="pdf-viewer">
+      </div>
+      <div className="pdf-viewer">
           {isLoading && <LoadingSpinner />}
           <div style={{ display: isLoading ? "none" : "block" }}>
-            <Document
-              file={pdfFile}
+        <Document
+          file={pdfFile}
               onLoadSuccess={({ numPages }) => {
                 onDocumentLoadSuccess({ numPages });
                 setIsDocumentLoaded(true);
@@ -591,23 +612,23 @@ const PdfViewer = forwardRef(
                 />
               ) : (
                 Array.from(new Array(numPages), (el, index) => (
-                  <Page
-                    key={`page_${index + 1}`}
-                    pageNumber={index + 1}
-                    scale={scale}
+            <Page
+              key={`page_${index + 1}`}
+              pageNumber={index + 1}
+              scale={scale}
                     className="pdf-page"
                     renderTextLayer={true}
-                    renderAnnotationLayer={true}
+              renderAnnotationLayer={true}
                     loading={null}
-                  />
+            />
                 ))
               )}
-            </Document>
-          </div>
-        </div>
+        </Document>
+      </div>
+    </div>
       </div>
     );
   }
-);
+  );
 
 export default PdfViewer;
