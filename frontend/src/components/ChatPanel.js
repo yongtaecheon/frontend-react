@@ -156,7 +156,6 @@ const ChatPanel = forwardRef(({
                         <span style={{ fontWeight: parentIdx === option.parents.length - 1 ? 'bold' : 'normal' }}>
                           {parent.title}
                         </span>
-                        {parentIdx < option.parents.length - 1 && ' >'}
                       </div>
                     ))}
                   </div>
@@ -330,7 +329,44 @@ const ChatPanel = forwardRef(({
                 key={index}
                 className="option-button"
                 onClick={() => {
-                  onOptionClick(keyword);
+                  // Find the matching item and its parent sections
+                  const matchingItem = toc.find(item => item.title === keyword.text);
+                  if (matchingItem) {
+                    const parentSections = [];
+                    let currentItem = matchingItem;
+
+                    while (currentItem.parentId) {
+                      const parent = toc.find(t => t.id === currentItem.parentId);
+                      if (parent) {
+                        parentSections.unshift(parent);
+                        currentItem = parent;
+                      } else {
+                        break;
+                      }
+                    }
+
+                    // Add selected button text as user message
+                    const userMessage = {
+                      type: 'user',
+                      content: keyword.text,
+                      options: []
+                    };
+
+                    // Add search result as bot message
+                    const botMessage = {
+                      type: 'bot',
+                      content: '검색 결과',
+                      options: [{
+                        text: matchingItem.title,
+                        page: matchingItem.page,
+                        level: matchingItem.level,
+                        parents: parentSections
+                      }]
+                    };
+
+                    // Update chat history and navigate silently
+                    onOptionClick({ type: 'addMessages', messages: [userMessage, botMessage] });
+                  }
                   setSearchQuery("");
                 }}
               >
