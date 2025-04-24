@@ -26,7 +26,7 @@ def extract_pdf_info(file_path):
     toc = doc.get_toc()
     if not toc:
         toc = guess_pdf_headings(doc)
-        
+
     structured = []
     id_map = {}  # title -> item
     stack = []   # 계층 추적을 위한 스택
