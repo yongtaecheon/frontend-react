@@ -104,12 +104,67 @@
 }
 
 .page-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   padding: 0 8px;
   font-size: 13px;
   color: #333;
   font-weight: 500;
   min-width: 85px;
   text-align: center;
+}
+
+.page-number-display {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  min-width: 30px;
+  text-align: center;
+  display: inline-block;
+}
+
+.page-number-display:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.page-separator {
+  color: #666;
+  margin: 0 2px;
+}
+
+.total-pages {
+  color: #666;
+  min-width: 30px;
+  text-align: center;
+}
+
+.page-input {
+  width: 40px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 13px;
+  -moz-appearance: textfield;
+}
+
+.page-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.page-input.invalid {
+  border-color: #ff3b30;
+  box-shadow: 0 0 0 1px #ff3b30;
+}
+
+.page-input::-webkit-inner-spin-button,
+.page-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .zoom-text {
@@ -424,4 +479,9 @@
 .zoom-input.invalid {
   border-color: #dc3545;
   box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+.page-input.invalid {
+  border-color: #ff3b30;
+  box-shadow: 0 0 0 1px #ff3b30;
 }
