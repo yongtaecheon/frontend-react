@@ -4,7 +4,7 @@ import "../styles/components/LoadingSpinner.css";
 const LoadingSpinner = ({ className = '' }) => {
   return (
     <div className={`loading-spinner ${className}`}>
-      <img src="/poby_face.png" alt="Loading..." style={{ width: '100px', height: '100px' }} />
+      <img src="/poby_face.png" alt="Loading..." />
     </div>
   );
 };

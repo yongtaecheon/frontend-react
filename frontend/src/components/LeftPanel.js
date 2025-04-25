@@ -10,6 +10,7 @@ const LeftPanel = ({
   onDocumentClick,
   onUpdateDocumentTitle,
   onDeleteDocument,
+  setCurrentPage,
 }) => {
   const [editingDocId, setEditingDocId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
@@ -90,7 +91,13 @@ const LeftPanel = ({
         <button onClick={() => document.getElementById("file-input").click()} className="file-upload-button">
           파일 업로드
         </button>
-        <input id="file-input" type="file" accept=".pdf" onChange={onFileChange} style={{ display: "none" }} />
+        <input
+          id="file-input"
+          type="file"
+          accept=".pdf"
+          onChange={onFileChange}
+          style={{ display: "none" }}
+        />
         <img src="/poby_leftpanel.png" alt="" className="panel-image" />
         <div className="documents-list">
           <h3>업로드 한 문서</h3>

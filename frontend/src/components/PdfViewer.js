@@ -305,7 +305,7 @@ const PdfViewer = forwardRef(
     const handlePageInputChange = (e) => {
       const value = e.target.value;
       setPageInputValue(value);
-      
+
       // 페이지 번호 유효성 검사
       const pageNum = parseInt(value);
       if (isNaN(pageNum) || pageNum < 1 || pageNum > numPages) {
@@ -423,6 +423,7 @@ const PdfViewer = forwardRef(
     useEffect(() => {
       setIsLoading(true);
       setIsDocumentLoaded(false);
+      setCurrentPage(1); // Reset to first page when new file is loaded
     }, [pdfFile]);
 
     useEffect(() => {
