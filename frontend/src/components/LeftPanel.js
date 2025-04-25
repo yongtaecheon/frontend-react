@@ -100,38 +100,40 @@ const LeftPanel = ({
         />
         <img src="/poby_leftpanel.png" alt="" className="panel-image" />
         <div className="documents-list">
-          <h3>업로드 한 문서</h3>
-          {documents.map((doc, index) => (
-            <div
-              key={index}
-              className={`document-item ${isCurrentDocument(doc) ? "active" : ""}`}
-              onClick={() => onDocumentClick(doc)}
-              title={doc.title}
-            >
-              {editingDocId === doc.title ? (
-                <input
-                  ref={editInputRef}
-                  type="text"
-                  value={editTitle}
-                  onChange={handleTitleChange}
-                  onKeyDown={(e) => handleTitleKeyDown(e, doc)}
-                  onBlur={() => handleTitleBlur(doc)}
-                  className="document-title-input"
-                  onClick={(e) => e.stopPropagation()}
-                />
-              ) : (
-                <span className="document-title">{doc.title}</span>
-              )}
-              <div className="document-actions">
-                <button className="document-action-button" onClick={(e) => handleEdit(e, doc)}>
-                  <span className="material-symbols-outlined">edit</span>
-                </button>
-                <button className="document-action-button" onClick={(e) => handleDelete(e, doc)}>
-                  <span className="material-symbols-outlined">delete</span>
-                </button>
+          <h3 className="documents-list-header">업로드 한 문서</h3>
+          <div className="documents-list-content">
+            {documents.map((doc, index) => (
+              <div
+                key={index}
+                className={`document-item ${isCurrentDocument(doc) ? "active" : ""}`}
+                onClick={() => onDocumentClick(doc)}
+                title={doc.title}
+              >
+                {editingDocId === doc.title ? (
+                  <input
+                    ref={editInputRef}
+                    type="text"
+                    value={editTitle}
+                    onChange={handleTitleChange}
+                    onKeyDown={(e) => handleTitleKeyDown(e, doc)}
+                    onBlur={() => handleTitleBlur(doc)}
+                    className="document-title-input"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                ) : (
+                  <span className="document-title">{doc.title}</span>
+                )}
+                <div className="document-actions">
+                  <button className="document-action-button" onClick={(e) => handleEdit(e, doc)}>
+                    <span className="material-symbols-outlined">edit</span>
+                  </button>
+                  <button className="document-action-button" onClick={(e) => handleDelete(e, doc)}>
+                    <span className="material-symbols-outlined">delete</span>
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
       <div className="collapsed-panel-indicator" onClick={() => setIsPanelCollapsed(false)}>
