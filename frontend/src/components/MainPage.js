@@ -107,6 +107,13 @@ function MainPage() {
 
       if (response.status === 200) {
         await handleLoadDocuments();
+
+        // 현재 선택된 문서라면 currentPdfFile도 새 이름으로 갱신
+        if (pdfFile && pdfFile.includes(doc.title)) {
+          const newFileUrl = `${server_URL}/file?fileName=${newTitle}`;
+          setPdfFile(newFileUrl);
+        }
+
         return true;
       }
     } catch (error) {
