@@ -20,6 +20,7 @@ function MainPage() {
   const {
     pdfFile,
     pdfKey,
+    fileName,
     numPages,
     scale,
     isLoading: pdfLoading,
@@ -172,6 +173,7 @@ function MainPage() {
             ref={pdfViewerRef}
             pdfFile={pdfFile}
             pdfKey={pdfKey}
+            fileName={fileName}
             numPages={numPages}
             scale={scale}
             setScale={setScale}

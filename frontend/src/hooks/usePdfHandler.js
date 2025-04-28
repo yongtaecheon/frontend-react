@@ -3,6 +3,7 @@ import axios from "axios";
 
 export const usePdfHandler = () => {
   const [pdfFile, setPdfFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
   const [pdfKey, setPdfKey] = useState(0);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -29,6 +30,7 @@ export const usePdfHandler = () => {
         console.log("post: upload file");
         console.log(response.data);
 
+        setFileName(response.data);
         const fileUrl = `${server_URL}/file?fileName=${response.data}`;
         setPdfFile(fileUrl);
         setPdfKey((prev) => prev + 1);
@@ -62,6 +64,7 @@ export const usePdfHandler = () => {
   const handleDocumentClick = useCallback((document) => {
     setIsLoading(true);
     const fileUrl = `${process.env.REACT_APP_SERVER_URL}/file?fileName=${document.title}`;
+    setFileName(document.title);
     setPdfFile(fileUrl);
     setPdfKey((prev) => prev + 1);
     setPageNumber(0);
@@ -73,6 +76,7 @@ export const usePdfHandler = () => {
     pdfFile,
     pdfKey,
     setPdfKey,
+    fileName,
     numPages,
     pageNumber,
     scale,
