@@ -1,93 +1,209 @@
-/* .tree-node {
-  padding: 0.75rem;
-  border-radius: 6px;
-  background-color: #fff;
-  border: 1px solid #4f423c;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 180px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-} */
+:root {
+  /* 기본 노드 (하위레벨 없는 노드) */
+  --node-bg-color: #ffffff;
+  --node-border-color: #c2c3c5;
+  --node-text-color: #495057;
 
-.tree-node:hover {
-  background-color: #4f423c;
-  transform: translateY(-2px);
+  /* 하위레벨 있는 노드 */
+  --node-parent-bg-color: #faf6f0;
+  --node-parent-border-color: #bdb9ad;
+
+  /* 활성화된 노드 (열린 상태) */
+  --node-active-bg-color: #f3e8d5;
+  --node-active-border-color: #c4a882;
+  --node-active-text-color: #8b6b43;
+
+  /* 호버 상태 */
+  --node-hover-bg-color: #f5f4f1;
+  --node-hover-border-color: #968e86;
+
+  /* 연결선 */
+  --link-color: #9e9b97;
 }
 
-.tree-node:hover .tree-node-title,
-.tree-node:hover .tree-node-page,
-.tree-node:hover .tree-node-importance {
-  color: white;
+.tree-container {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: var(--color-bg-light);
+}
+
+.tree-title {
+  color: var(--color-button-dim);
+  margin: 1rem;
+  font-size: 1.5rem;
+}
+
+.tree-content {
+  width: 100%;
+  height: 100vh;
+  border-radius: 0px;
+  border-top: 1px solid var(--color-border);
+  /* background: var(--color-light-gray); */
+  background: #fbfbfb;
+}
+
+.tree-node {
+  background: var(--color-white);
+  padding: 8px 16px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--node-border-color);
+  cursor: pointer;
+  text-align: left;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s ease;
+}
+
+/* 하위레벨이 있는 노드 */
+.tree-node.has-children {
+  background: var(--node-parent-bg-color);
+  border-color: var(--node-parent-border-color);
+  font-weight: 500;
+}
+
+/* 활성화된 노드 (열린 상태) */
+.tree-node.active {
+  background: var(--node-active-bg-color);
+  border-color: var(--node-active-border-color);
+}
+
+.tree-node.active .tree-node-title {
+  color: var(--node-active-text-color);
+  font-weight: 600;
+}
+
+/* 호버 효과 */
+.tree-node:hover {
+  background: var(--node-hover-bg-color);
+  border-color: var(--node-hover-border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .tree-node-title {
-  font-size: 0.9rem;
-  color: var(--color-black);
-  margin-bottom: 0.5rem;
+  font-size: 14px;
+  color: var(--node-text-color);
   font-weight: 500;
-  /* text-align: center; */
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
-.tree-node-keywords {
+.tree-link {
+  stroke: var(--link-color) !important;
+  stroke-width: 1px !important;
+}
+
+/* 기존 불필요한 스타일 제거 */
+.tree-node-circle,
+.tree-node-keywords,
+.tree-node-keyword,
+.tree-node-info,
+.tree-node-page,
+.tree-node-importance,
+.tree-node-selected {
+  display: none;
+}
+
+.tree-header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-right: 1rem;
+  flex: 1;
+}
+
+.tree-toggle-btn {
+  background: var(--color-button-dim);
+  border: 1px solid var(--color-border);
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--color-white);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.tree-toggle-btn:hover {
+  background: var(--color-button-light);
+}
+
+.tree-toggle-btn:active {
+  background: var(--color-black);
+}
+
+.tree-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
   justify-content: center;
-  margin-bottom: 0.5rem;
+  align-items: center;
+  z-index: 1000;
 }
 
-.tree-node-keyword {
-  font-size: 0.7rem;
-  padding: 0.125rem 0.5rem;
-  background-color: #f0f0f0;
-  border-radius: 12px;
-  color: #666;
+.tree-modal {
+  background: var(--color-white);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 95%;
+  max-width: 1600px;
+  height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.tree-node:hover .tree-node-keyword {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-}
-
-.tree-node-info {
+.tree-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.8rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--node-border-color);
+  background-color: var(--color-bg-light);
 }
 
-.tree-node-page {
-  color: #666;
-  font-size: 0.75rem;
-}
-
-.tree-node-importance {
-  color: #ffd700;
-  letter-spacing: -1px;
-}
-
-.tree-node-selected {
-  background-color: red;
-}
-
-.tree-node-selected .tree-node-title,
-.tree-node-selected .tree-node-page,
-.tree-node-selected .tree-node-importance {
-  color: white;
-}
-
-.tree-node-selected .tree-node-keyword {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-}
-
-.tree-node-circle {
+.tree-modal-close {
+  background: none;
+  border: none;
   cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--node-text-color);
   transition: all 0.2s ease;
 }
 
-.tree-node-circle:hover {
-  fill: #fff;
-  stroke: #4f423c;
-  transform: scale(1.1);
+.tree-modal-close:hover {
+  background: var(--node-hover-bg-color);
+  color: var(--node-active-text-color);
+}
+
+.tree-modal-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.2rem;
+  color: var(--node-text-color);
+}
+
+.tree-content {
+  flex: 1;
+  overflow: auto;
+  padding: 2rem;
+  background: #fbfbfb;
 }

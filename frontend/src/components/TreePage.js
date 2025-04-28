@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Tree from "react-d3-tree";
 import { useDocumentHandler } from "../hooks/useDocumentHandler";
 import "../styles/components/TreePage.css";
 import "../styles/components/TreeNode.css";
+import "../styles/global.css";
 
 // TOC 데이터를 react-d3-tree 형식으로 변환하는 함수
 const transformToTree = (fileName, nodes) => {
@@ -15,12 +15,6 @@ const transformToTree = (fileName, nodes) => {
     nodeMap[node.id] = {
       name: node.title, // react-d3-tree는 'name' 속성을 사용
       children: [], // 자식 노드를 저장할 배열
-      // attributes: {
-      //   // 추가 정보를 attributes에 저장
-      //   "페이지 번호": node.page,
-      //   담당자: node.persons.map((person) => person.name),
-      //   "Jira 이슈": node.issues.map((issue) => issue.title),
-      // },
     };
   });
 
@@ -51,78 +45,112 @@ const transformToTree = (fileName, nodes) => {
   return rootNodes[0] || { name: "No Data", children: [] }; // 항상 단일 루트 노드 반환
 };
 
-const TreePage = () => {
-  const { fileName } = useParams();
-  console.log(fileName);
-  console.log(decodeURIComponent(fileName));
-  console.log(encodeURIComponent(fileName));
+const TreeModal = ({ fileName, onClose }) => {
   const { documents } = useDocumentHandler();
   const [treeData, setTreeData] = useState(null);
   const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  // 컨테이너 크기 감지
-  useEffect(() => {
-    if (containerRef.current) {
-      const resizeObserver = new ResizeObserver((entries) => {
-        if (entries[0]) {
-          setDimensions({
-            width: entries[0].contentRect.width,
-            height: entries[0].contentRect.height,
-          });
-        }
-      });
-
-      resizeObserver.observe(containerRef.current);
-      return () => resizeObserver.disconnect();
-    }
-  }, []);
-
-  // documents가 로드되면 현재 파일의 TOC 데이터를 트리 데이터로 변환
+  // 초기 트리 데이터 설정
   useEffect(() => {
     if (documents && fileName) {
-      const currentDoc = documents.find((doc) => doc.title === decodeURIComponent(fileName));
-      console.log(currentDoc);
+      const currentDoc = documents.find((doc) => doc.title === fileName);
       if (currentDoc && currentDoc.toc) {
-        const transformedData = transformToTree(fileName, currentDoc.toc);
-        setTreeData(transformedData);
+        const initialData = transformToTree(fileName, currentDoc.toc);
+        // 초기 데이터에 collapsed 상태 추가
+        const addCollapsedState = (node) => {
+          const newNode = { ...node };
+          if (newNode.children && newNode.children.length > 0) {
+            newNode.__rd3t = { collapsed: true };
+            newNode.children = newNode.children.map(addCollapsedState);
+          }
+          return newNode;
+        };
+        setTreeData(addCollapsedState(initialData));
       }
     }
   }, [documents, fileName]);
 
-  const renderCustomNode = ({ nodeDatum, toggleNode }) => (
-    <g>
-      <circle r={15} onClick={toggleNode} className="tree-node-circle" fill="#4f423c" stroke="#fff" strokeWidth="2" />
-      <foreignObject x={20} y={-20} width={200} height={100}>
-        <div className="tree-node">
-          <div className="tree-node-title">{nodeDatum.name}</div>
-        </div>
-      </foreignObject>
-    </g>
-  );
+  // 트리 확장/축소 토글
+  const toggleTreeExpansion = useCallback(() => {
+    if (!treeData) return;
+
+    const toggleNodes = (node) => {
+      const newNode = { ...node };
+      if (newNode.children && newNode.children.length > 0) {
+        newNode.__rd3t = { collapsed: isExpanded };
+        newNode.children = newNode.children.map(toggleNodes);
+      }
+      return newNode;
+    };
+
+    setTreeData(toggleNodes(treeData));
+    setIsExpanded(!isExpanded);
+  }, [treeData, isExpanded]);
+
+  // 개별 노드 렌더링
+  const renderCustomNode = ({ nodeDatum, toggleNode }) => {
+    const hasChildren = nodeDatum.children && nodeDatum.children.length > 0;
+    const isNodeActive = hasChildren && !nodeDatum.__rd3t?.collapsed;
+
+    const nodeClasses = ["tree-node", hasChildren ? "has-children" : "", isNodeActive ? "active" : ""]
+      .filter(Boolean)
+      .join(" ");
+
+    return (
+      <g onClick={toggleNode}>
+        <foreignObject x={-100} y={-20} width={200} height={60}>
+          <div className={nodeClasses} title={nodeDatum.name}>
+            <div className="tree-node-title">{nodeDatum.name}</div>
+          </div>
+        </foreignObject>
+      </g>
+    );
+  };
 
   if (!treeData) {
-    return <div className="tree-loading">Loading...</div>;
+    return <div className="tree-modal-loading">Loading...</div>;
   }
-  console.log(treeData);
+
   return (
-    <div className="tree-container" ref={containerRef}>
-      <h2 className="tree-title">{fileName} - Document Structure</h2>
-      <div className="tree-content">
-        <Tree
-          data={treeData}
-          orientation="vertical"
-          translate={{ x: dimensions.width / 2, y: 50 }}
-          nodeSize={{ x: 100, y: 200 }}
-          separation={{ siblings: 2, nonSiblings: 3 }}
-          pathFunc="step"
-          collapsible={true}
-          initialDepth={1}
-          renderCustomNodeElement={renderCustomNode}
-        />
+    <div className="tree-modal-overlay" onClick={onClose}>
+      <div className="tree-modal" ref={containerRef} onClick={(e) => e.stopPropagation()}>
+        <div className="tree-modal-header">
+          <div className="tree-header">
+            <h2 className="tree-title">{fileName} 의 목차 트리</h2>
+            <button
+              className="tree-toggle-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleTreeExpansion();
+              }}
+            >
+              {isExpanded ? "모두 접기" : "모두 펼치기"}
+            </button>
+          </div>
+          <button className="tree-modal-close" onClick={onClose}>
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div className="tree-content">
+          <Tree
+            data={treeData}
+            orientation="horizontal"
+            translate={{ x: 120, y: 400 }}
+            nodeSize={{ x: 220, y: 30 }}
+            separation={{ siblings: 1.5, nonSiblings: 2 }}
+            pathFunc="step"
+            collapsible={true}
+            initialDepth={isExpanded ? Infinity : 1}
+            renderCustomNodeElement={renderCustomNode}
+            pathClassFunc={() => "tree-link"}
+            zoomable={true}
+          />
+        </div>
       </div>
     </div>
   );
 };
 
-export default TreePage;
+export default TreeModal;
