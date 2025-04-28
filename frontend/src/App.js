@@ -8,6 +8,7 @@ import "./styles/components/MainLayout.css";
 import "./styles/components/LandingPage.css";
 import "./styles/components/Chat.css";
 import "./styles/components/PDFViewer.css";
+import TreePage from "./components/TreePage";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/tree/:fileName" element={<TreePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
